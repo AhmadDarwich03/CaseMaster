@@ -1,0 +1,6 @@
+id,problem,description,tid,status
+1,login issue,Unable to login to the portal,2023-09-01 10:15:00,open
+2,password reset,Forgot password and need a reset,2023-09-02 12:30:00,open
+3,server error,500 error when trying to access the page,2023-09-02 14:45:00,open
+4,page load slow,Website is slow to load,2023-09-03 09:00:00,open 
+5,account suspended,Account suspended without reason,2023-09-04 11:20:00,open

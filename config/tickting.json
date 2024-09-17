@@ -1,0 +1,7 @@
+{
+    "host":     "172.25.14.187",
+    "user":     "dbadm",
+    "password": "P@ssw0rd",
+    "database": "ticketing",
+    "multipleStatements": true
+}

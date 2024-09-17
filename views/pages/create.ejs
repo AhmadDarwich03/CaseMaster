@@ -1,0 +1,22 @@
+<%- include('./../partials/header.ejs') %>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticketing System</title>
+    <link rel="stylesheet" href="/css/styles.css"> 
+</head>
+
+<section>
+    <h2>Create a New Ticket</h2>
+    <form action="/create" method="POST">
+        <label for="problem">Problem</label>
+        <input type="text" id="problem" name="problem" required> 
+
+        <label for="description">Description</label>
+        <input type="text" id="description" name="description" required>
+
+        <button type="submit">Create Ticket</button>
+    </form>
+</section>
+<%- include('./../partials/footer.ejs') %>
