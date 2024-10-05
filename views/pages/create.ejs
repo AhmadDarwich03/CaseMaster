@@ -1,22 +1,26 @@
-<%- include('./../partials/header.ejs') %>
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticketing System</title>
-    <link rel="stylesheet" href="/css/styles.css"> 
-</head>
+<%- include('../partials/header.ejs') %>
 
 <section>
     <h2>Create a New Ticket</h2>
-    <form action="/create" method="POST">
+    <form action="/create" method="POST" enctype="multipart/form-data">
         <label for="problem">Problem</label>
-        <input type="text" id="problem" name="problem" required> 
+        <input type="text" id="problem" name="problem" required>
 
-        <label for="description">Description</label>
-        <input type="text" id="description" name="description" required>
+        <label>Description</label>
+        <textarea name="description" rows="4" required></textarea>
+
+        <label for="department">Choose Department</label>
+        <select name="department" id="department" required>
+            <option value="Teknisk Supportcenter">Teknisk Supportcenter</option>
+            <option value="IT Support Services">IT Support Services</option>
+            <option value="other">Other</option>
+        </select>
+
+        <label for="attachment">Attach a Picture or Document</label>
+        <input type="file" id="attachment" name="attachment" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
 
         <button type="submit">Create Ticket</button>
     </form>
 </section>
-<%- include('./../partials/footer.ejs') %>
+
+<%- include('../partials/footer.ejs') %>

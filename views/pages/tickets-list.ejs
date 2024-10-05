@@ -1,13 +1,4 @@
-<%- include('./../partials/header.ejs') %>
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticketing System</title>
-    <link rel="stylesheet" href="/css/styles.css"> 
-</head>
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -28,8 +19,10 @@
                     <th>ID</th>
                     <th>Problem</th>
                     <th>Description</th>
+                    <th>Department</th>
                     <th>Timestamp</th>
                     <th>Status</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -39,18 +32,27 @@
                             <td><%= ticket.id %></td>
                             <td><%= ticket.problem %></td>
                             <td><%= ticket.description %></td>
+                            <td><%= ticket.department %></td>
                             <td><%= new Date(ticket.tid).toLocaleString() %></td>
                             <td><%= ticket.status %></td>
+                            <td>
+                                <% if (ticket.status === 'open') { %>
+                                    <form action="/ticket/close/<%= ticket.id %>" method="POST">
+                                        <button type="submit">Close Ticket</button>
+                                    </form>
+                                <% } else { %>
+                                    <span>Closed</span>
+                                <% } %>
+                            </td>
                         </tr>
                     <% }) %>
                 <% } else { %>
                     <tr>
-                        <td colspan="6">No tickets found.</td>
+                        <td colspan="7">No tickets found.</td>
                     </tr>
                 <% } %>
             </tbody>
-        </table>
+        </table>        
     </main>
 </body>
 </html>
-<%- include('./../partials/footer.ejs') %>
