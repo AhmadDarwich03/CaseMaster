@@ -1,6 +1,6 @@
 {
-    "host":     "172.25.14.187",
-    "user":     "dbadm",
+    "host":     "localhost",
+    "user":     "root",
     "password": "P@ssw0rd",
     "database": "ticketing",
     "multipleStatements": true

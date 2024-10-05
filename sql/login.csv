@@ -1,4 +1,4 @@
 username,password,role
-admin,$2a$10$V1P...hashedPassword1...,admin
-user1,$2a$10$abc...hashedPassword2...,user
-user2,$2a$10$xyz...hashedPassword3...,user
+admin,$2a$10$M9fABnBEnYhm3Q9231ColOstpQJ.Z2iTBsKPMoGqJJWRC79wqhNIi,admin
+user1,$2a$10$xyDZS86ZpHsGaQkEcD0uCuu3k2tQo/Byn4S8AD4IvsTnCfOhKOXZm,user
+user2,$2a$10$XarEDya2ULge8PwIfSH2B.3bZMy1sc/K5M7Ts1eKBUlkebtTWikze,user

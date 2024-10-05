@@ -13,12 +13,12 @@ function authMiddleware(req, res, next) {
     next();
 }
 
-function adminMiddleware(req, res, next) {
-    if (!req.session || req.session.userRole !== 'admin') {
-        return res.status(403).send('Access denied: Admins only');
-    }
-    next();
-}
+// function adminMiddleware(req, res, next) {
+//     if (!req.session || req.session.userRole !== 'admin') {
+//         return res.status(403).send('Access denied: Admins only');
+//     }
+//     next();
+// }
 
 // Configure Multer for file uploads
 const storage = multer.diskStorage({
@@ -110,7 +110,7 @@ router.get('/login', (req, res) => {
 
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
-
+    
     try {
         const user = await index.getUserByUsername(username);
 
