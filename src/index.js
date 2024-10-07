@@ -9,30 +9,42 @@ async function connectDB() {
 }
 
 // Hämta användare baserat på användarnamn
-async function getUserByUsername(username) {
-    const db = await connectDB();  // Använder connectDB-funktionen för att ansluta till databasen
+async function getUserByUsernameOrEmail(identifier) {
+    const db = await mysql.createConnection(config);
 
-    let sql = `SELECT * FROM users WHERE username = ?`;
-    let res = await db.query(sql, [username]);
+    // Sök efter användare baserat på användarnamn eller e-post
+    let sql = `SELECT * FROM users WHERE username = ? OR email = ?`;
+    let res = await db.query(sql, [identifier, identifier]);
+
     await db.end();
-    return res[0];
+    return res[0];  // Returnera första träffen
 }
+
 
 // Lägg till en användare i databasen
-async function addUser(user) {
-    const db = await connectDB();
-    let sql = `INSERT INTO users (username, password, role) VALUES (?, ?, ?)`;
-    await db.query(sql, [user.username, user.password, user.role]);
+async function addUser(username, email, hashedPassword) {
+    const db = await mysql.createConnection(config);
+
+    let sql = `INSERT INTO users (username, email, password, role)
+               VALUES (?, ?, ?, 'user');`;
+
+    await db.query(sql, [username, email, hashedPassword]);
     await db.end();
 }
+
 
 // Lägg till en ny ticket
 async function addTicket(data) {
-    const db = await connectDB();
-    let sql = `CALL create_ticket(?, ?, ?);`;
-    await db.query(sql, [data.problem, data.description, data.department]);
+    const db = await mysql.createConnection(config);
+
+    // Inkludera `user_id` vid skapandet av en ny ticket
+    let sql = `INSERT INTO tickets (problem, description, category, imagePath, status, user_id)
+               VALUES (?, ?, ?, ?, 'open', ?);`;
+
+    await db.query(sql, [data.problem, data.description, data.category, data.imagePath || null, data.user_id]);
     await db.end();
 }
+
 
 // Hämta alla tickets
 async function viewTickets() {
@@ -60,14 +72,46 @@ async function getTicketById(ticketId) {
     await db.end();
     return res[0];
 }
+async function filterTickets(category, status) {
+    const db = await mysql.createConnection(config);
+
+    // Grundläggande SQL-fråga
+    let sql = `SELECT id, problem, description, tid, category, status FROM tickets WHERE 1=1`;
+
+    // Lägg till kategorifilter om det är valt
+    if (category) {
+        sql += ` AND category = '${category}'`;
+    }
+
+    // Lägg till statusfilter om det är valt
+    if (status) {
+        sql += ` AND status = '${status}'`;
+    }
+
+    let res = await db.query(sql);
+    await db.end();
+    return res;
+}
+async function viewTicketsByUser(userId) {
+    const db = await mysql.createConnection(config);
+
+    // Hämta endast tickets som skapats av den inloggade användaren
+    let sql = `SELECT id, problem, description, category, imagePath, tid, status FROM tickets WHERE user_id = ?;`;
+    let res = await db.query(sql, [userId]);
+
+    await db.end();
+    return res;
+}
 
 // Exportera alla funktioner så att de kan användas i routes
 module.exports = {
     connectDB,               // Exportera connectDB-funktionen
-    getUserByUsername,       // Hämta användare baserat på användarnamn
+    getUserByUsernameOrEmail,       // Hämta användare baserat på användarnamn
     addUser,                 // Lägg till en ny användare
     addTicket,               // Lägg till en ny ticket
     viewTickets,             // Hämta alla tickets
     updateTicketStatus,      // Uppdatera ticket-status
-    getTicketById            // Hämta en ticket baserat på ID
+    getTicketById,            // Hämta en ticket baserat på ID
+    filterTickets,
+    viewTicketsByUser
 };

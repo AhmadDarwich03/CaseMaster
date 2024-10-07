@@ -23,15 +23,17 @@ function authMiddleware(req, res, next) {
 // Configure Multer for file uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'public/uploads'); // Set upload destination
+        cb(null, 'public/uploads'); // Ställ in destinationen för uppladdningar
     },
     filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname)); // Generate unique filename
+        cb(null, Date.now() + path.extname(file.originalname)); // Ger varje fil ett unikt namn
     }
 });
 
-// File upload middleware
-const upload = multer({ storage: storage });
+// Definiera vilka fält som Multer ska förvänta sig
+const upload = multer({
+    storage: storage,
+});
 
 // Route: Homepage
 router.get("/", authMiddleware, (req, res) => {
@@ -48,32 +50,37 @@ router.get("/create", authMiddleware, (req, res) => {
 });
 
 // Handle POST /create for ticket creation
-router.post("/create", authMiddleware, upload.single('image'), async (req, res) => {
+router.post("/create", upload.single('attachment'), async (req, res) => {
     try {
         const ticketData = req.body;
-        ticketData.user_id = req.session.userId; // Link the ticket to the logged-in user
+        ticketData.user_id = req.session.userId;  // Använd sessionens `userId` för att koppla ticket till användaren
+
+        // Spara bilduppladdningen om det finns en fil
         if (req.file) {
-            ticketData.imagePath = req.file.path;  // Store image path if file is uploaded
+            ticketData.imagePath = req.file.path;  // Spara bildens sökväg i databasen
         }
 
-        await index.addTicket(ticketData);  // Call the function to insert the ticket into the DB
-        res.redirect("/tickets-list");
+        await index.addTicket(ticketData);  // Lägg till ticketen i databasen
+        res.redirect("/tickets-list");  
     } catch (error) {
         console.error("Error creating ticket:", error);
         res.status(500).send("Internal Server Error");
     }
 });
 
+
 // Route: View all tickets (Admin only)
-router.get("/tickets-list", authMiddleware, async (req, res) => {
+router.get("/tickets-list", async (req, res) => {
     try {
         let data = {};
-        data.title = "Tickets List";
+        data.title = "All Tickets";
 
-        if (req.session.userRole === 'admin') {
-            data.allTickets = await index.viewTickets();  // Admin can see all tickets
+        // Om användaren är en vanlig användare, visa endast deras egna tickets
+        if (req.session.userRole === 'user') {
+            data.filteredTickets = await index.viewTicketsByUser(req.session.userId);  // Visa endast användarens tickets
         } else {
-            data.allTickets = await index.viewTicketsByUser(req.session.userId);  // Regular user can only see their own tickets
+            // Om användaren är admin, visa alla tickets
+            data.filteredTickets = await index.viewTickets();
         }
 
         res.render("pages/tickets-list.ejs", data);
@@ -82,6 +89,7 @@ router.get("/tickets-list", authMiddleware, async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 });
+
 
 // Route: Close a ticket (only accessible by the ticket owner or admin)
 router.get('/ticket/close/:id', authMiddleware, async (req, res) => {
@@ -110,22 +118,27 @@ router.get('/login', (req, res) => {
 
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
-    
-    try {
-        const user = await index.getUserByUsername(username);
 
-        if (user && bcrypt.compareSync(password, user.password)) {
+    try {
+        // Försök hitta användaren antingen med användarnamn eller e-post
+        const user = await index.getUserByUsernameOrEmail(username);  
+
+        if (user && await bcrypt.compare(password, user.password)) {
             req.session.userId = user.id;
             req.session.userRole = user.role;
-            return res.redirect('/');
+            req.session.username = user.username;
+            req.session.email = user.email;
+
+            return res.redirect('/tickets-list');
         } else {
-            res.render('pages/login', { title: 'Login', message: 'Invalid username or password' });
+            res.render('pages/login.ejs', { message: 'Invalid username, email, or password' });
         }
     } catch (error) {
         console.error('Error logging in:', error);
-        res.render('pages/login', { title: 'Login', message: 'Internal Server Error' });
+        res.status(500).send('Internal Server Error');
     }
 });
+
 
 
 
@@ -137,6 +150,56 @@ router.get('/logout', (req, res) => {
         }
         res.redirect('/login');
     });
+});
+
+router.get("/register", (req, res) => {
+    res.render("pages/register.ejs", { message: "" });  // Skicka med en tom `message`
+});
+
+
+router.post("/register", async (req, res) => {
+    const { username, email, password } = req.body;
+
+    try {
+        // Hascha lösenordet innan det sparas i databasen
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Lägg till användaren i databasen
+        await index.addUser(username, email, hashedPassword);
+
+        res.redirect("/login");  // Skicka användaren till inloggningssidan efter registrering
+    } catch (error) {
+        console.error("Error registering new user:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+
+router.get("/tickets-list", async (req, res) => {
+    try {
+        let data = {};
+        data.title = "All Tickets";
+        data.allTickets = await index.viewTickets();  // Hämta alla tickets från databasen
+        res.render("pages/tickets-list.ejs", data);
+    } catch (error) {
+        console.error("Error fetching tickets:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+// Route för att visa detaljerna för en specifik ticket
+router.get("/ticket-details/:id", async (req, res) => {
+    const ticketId = req.params.id;  // Hämta id från URL:en
+
+    try {
+        let data = {};
+        data.title = "Ticket Details";
+        data.ticket = await index.getTicketById(ticketId);  // Hämta detaljer för en specifik ticket
+        res.render("pages/ticket-details.ejs", data);  // Rendera details-sidan
+    } catch (error) {
+        console.error("Error fetching ticket details:", error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 
 module.exports = router;

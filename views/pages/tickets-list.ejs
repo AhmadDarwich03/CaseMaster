@@ -1,45 +1,67 @@
 <%- include('./../partials/header.ejs') %>
 
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
+    <title>All Tickets</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
+
 <body>
     <header>
         <h1>All Tickets</h1>
         <nav>
-            <a href="/create">Create a new ticket</a>
+            <a href="/create" class="btn-create-ticket">Create a New Ticket</a>
         </nav>
     </header>
+
     <main>
+        <!-- Filter-formulär för category och status -->
+        <form action="/tickets-list" method="GET" class="filter-form">
+            <label for="category">Filter by Category:</label>
+            <select name="category" id="category">
+                <option value="">All Categories</option>
+                <option value="Technical Support">Technical Support</option>
+                <option value="IT Services">IT Services</option>
+                <option value="Performance">Performance</option>
+                <option value="Account Issues">Account Issues</option>
+            </select>
+
+            <label for="status">Filter by Status:</label>
+            <select name="status" id="status">
+                <option value="">All Statuses</option>
+                <option value="open">Open</option>
+                <option value="closed">Closed</option>
+            </select>
+
+            <button type="submit">Filter</button>
+        </form>
+
         <table border="1">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Problem</th>
                     <th>Description</th>
-                    <th>Department</th>
+                    <th>Category</th>
                     <th>Timestamp</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                <% if (allTickets.length > 0) { %>
-                    <% allTickets.forEach(ticket => { %>
+                <% if (filteredTickets.length > 0) { %>
+                    <% filteredTickets.forEach(ticket => { %>
                         <tr>
-                            <td><%= ticket.id %></td>
+                            <td><a href="/ticket-details/<%= ticket.id %>"><%= ticket.id %></a></td>
                             <td><%= ticket.problem %></td>
-                            <td><%= ticket.description %></td>
-                            <td><%= ticket.department %></td>
+                            <td class="description-column"><%= ticket.description %></td>
+                            <td><%= ticket.category %></td>
                             <td><%= new Date(ticket.tid).toLocaleString() %></td>
                             <td><%= ticket.status %></td>
                             <td>
                                 <% if (ticket.status === 'open') { %>
-                                    <form action="/ticket/close/<%= ticket.id %>" method="POST">
+                                    <form action="/ticket/close/<%= ticket.id %>" method="GET" style="display:inline;">
                                         <button type="submit">Close Ticket</button>
                                     </form>
                                 <% } else { %>
@@ -54,8 +76,8 @@
                     </tr>
                 <% } %>
             </tbody>
-        </table>        
+        </table>
     </main>
+
+    <%- include('./../partials/footer.ejs') %>
 </body>
-</html>
-<%- include('../partials/footer.ejs') %>

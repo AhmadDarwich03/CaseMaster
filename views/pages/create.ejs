@@ -1,26 +1,50 @@
-<%- include('../partials/header.ejs') %>
+<%- include('./../partials/header.ejs') %>
 
-<section>
-    <h2>Create a New Ticket</h2>
-    <form action="/create" method="POST" enctype="multipart/form-data">
-        <label for="problem">Problem</label>
-        <input type="text" id="problem" name="problem" required>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a Ticket</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
 
-        <label>Description</label>
-        <textarea name="description" rows="4" required></textarea>
+<body>
+    <section class="ticket-container">
+        <div class="ticket-header">
+            <h2>Create a New Support Ticket</h2>
+        </div>
+        <form action="/create" method="POST" enctype="multipart/form-data" class="ticket-form">
+            <div class="ticket-row">
+                <label for="problem">Problem</label>
+                <input type="text" id="problem" name="problem" placeholder="Enter your issue or problem" required>
+            </div>
 
-        <label for="department">Choose Department</label>
-        <select name="department" id="department" required>
-            <option value="Teknisk Supportcenter">Teknisk Supportcenter</option>
-            <option value="IT Support Services">IT Support Services</option>
-            <option value="other">Other</option>
-        </select>
+            <div class="ticket-row">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="10" style="height: 150px;" placeholder="Describe your issue in detail" required></textarea>
+            </div>
 
-        <label for="attachment">Attach a Picture or Document</label>
-        <input type="file" id="attachment" name="attachment" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
+            <div class="ticket-row">
+                <label for="category">Choose Category</label>
+                <select name="category" id="category" required>
+                    <option value="">Select Category</option>
+                    <option value="Technical Support">Technical Support</option>
+                    <option value="IT Services">IT Services</option>
+                    <option value="Account issue">Account issue</option>
+                    <option value="Performance">Performance</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
 
-        <button type="submit">Create Ticket</button>
-    </form>
-</section>
+            <label for="attachment">Attach a Picture or Document</label>
+            <!-- Se till att 'name' är korrekt och matchar Multer-konfigurationen -->
+            <input type="file" id="attachment" name="attachment" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
 
-<%- include('../partials/footer.ejs') %>
+
+            <div class="ticket-button">
+                <button type="submit">Create Ticket</button>
+            </div>
+        </form>
+    </section>
+
+    <%- include('./../partials/footer.ejs') %>
+</body>

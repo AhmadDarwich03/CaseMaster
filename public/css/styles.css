@@ -1,26 +1,30 @@
+/* General body styles for all pages */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9; 
     margin: 0;
     padding: 0;
+    font-family: Arial, sans-serif;
+    background-image: url('/images/bakgrund.webp'); /* Set the background image */
+    background-color: #f4f4f4; /* Fallback color if the image does not load */
+    background-size: cover; /* Make the background image cover the entire page */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent the background from repeating */
 }
 
-header a {
-    text-decoration: none;
-    color: inherit; 
-}
-
-
-h1, h2 {
-    text-align: center;
-    color: #333;
-}
-
+/* Header styles */
 header {
-    background-color: #007bff; 
+    background-color: #007bff;
     color: white;
-    padding: 10px;
+    padding: 20px;
     text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+header p {
+    font-size: 1.2em;
 }
 
 nav {
@@ -31,91 +35,67 @@ nav a {
     color: white;
     text-decoration: none;
     font-weight: bold;
-    margin: 0 10px;
+    margin: 0 15px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease-in-out;
 }
 
 nav a:hover {
-    text-decoration: underline;
+    background-color: #0056b3;
 }
 
+/* Styling for main sections */
 section {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.85); /* Add semi-transparent background */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
+/* Styling for forms */
 form {
     display: flex;
     flex-direction: column;
 }
 
 label {
-    margin: 10px 0 5px;
+    margin: 15px 0 5px;
     font-weight: bold;
-}
-
-input[type="text"],
-textarea {
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-bottom: 20px;
-}
-
-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-table {
-    width: 80%;
-    margin: 20px auto;
-    border-collapse: collapse;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-th, td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: center;
-}
-
-th {
-    background-color: #007bff;
-    color: white;
-}
-
-td {
     color: #333;
 }
 
-tr:nth-child(even) {
-    background-color: #f2f2f2;
+input[type="text"], input[type="password"], textarea, select {
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 15px;
 }
 
-tr:hover {
-    background-color: #e9e9e9;
+/* Button styles */
+button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+button:hover {
+    background-color: #218838;
 }
 
 .center-button {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; 
+    height: 100vh; /* Full-height */
 }
 
 .center-button a {
@@ -133,10 +113,61 @@ tr:hover {
     background-color: #0056b3;
 }
 
+/* Table styles */
+table {
+    width: 100%;
+    margin: 30px 0;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 16px;
+    text-align: center;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+td {
+    color: #333;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #e9e9e9;
+}
+
+/* Container styles for login and create pages */
+.container {
+    width: 400px;
+    margin: 100px auto;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+}
+
+/* Styling for error messages */
+.error-message {
+    color: red;
+    text-align: center;
+    margin-top: -10px;
+    margin-bottom: 15px;
+}
+
 /* Footer styles */
 footer {
     background-color: #333;
-    color: #fff;
+    color: white;
     padding: 40px 0;
     text-align: center;
 }
@@ -198,112 +229,295 @@ footer {
     padding: 10px 0;
 }
 
+/* Responsive styles */
 @media (max-width: 768px) {
     .footer-container {
         flex-direction: column;
         align-items: center;
     }
+
+    .container {
+        width: 90%;
+    }
+
+    header h1 {
+        font-size: 2em;
+    }
+
+    header p {
+        font-size: 1em;
+    }
 }
-/* Styling för välkomsttexten */
-header h1 {
-    font-size: 2.5rem;
-    color: #333;
+textarea {
+    resize: vertical; /* Tillåter användaren att dra och ändra storleken vertikalt */
+    height: 200px;    /* Standardhöjd, justera vid behov */
+    line-height: 1.5; /* Gör texten mer läsbar */
+}
+/* Container för ticket-layout */
+.ticket-container {
+    max-width: 600px;
+    margin: 50px auto;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 15px;  /* Rundade hörn */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);  /* Lätt skugga för att efterlikna en ticket */
+    overflow: hidden;
+}
+
+/* Header för ticket */
+.ticket-header {
+    background-color: #007bff;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Formulärstil för ticket */
+.ticket-form {
+    padding: 20px 30px;
+}
+
+/* Styling för varje rad i ticket-formuläret */
+.ticket-row {
+    margin-bottom: 20px;
+}
+
+/* Stil för input och textarea */
+.ticket-row label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.ticket-row input[type="text"],
+.ticket-row textarea,
+.ticket-row select {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px; /* Rundade hörn för inputs */
+    box-sizing: border-box;  /* Box-styling */
+}
+
+/* Button design */
+.ticket-button {
     text-align: center;
     margin-top: 20px;
 }
 
-header p {
-    font-size: 1.2rem;
-    color: #555;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-/* Styling för knappen "Skapa ett nytt ärende" */
-.create-ticket-button {
-    display: block;
-    width: 200px;
-    margin: 0 auto;
-    padding: 10px 20px;
+.ticket-button button {
     background-color: #28a745;
     color: white;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 1.2rem;
+    border: none;
+    padding: 15px 30px;
+    font-size: 16px;
+    border-radius: 10px; /* Rundad knapp för ticket-stil */
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
 }
 
-.create-ticket-button:hover {
+.ticket-button button:hover {
     background-color: #218838;
 }
 
-.welcome-message {
+/* Stil för input-fält */
+.ticket-row input[type="file"] {
+    font-size: 16px;
+    padding: 5px;
+}
+
+/* Anpassa för olika skärmstorlekar */
+@media (max-width: 768px) {
+    .ticket-container {
+        width: 90%;
+        margin: 30px auto;
+    }
+
+    .ticket-form {
+        padding: 15px;
+    }
+
+    .ticket-header {
+        font-size: 1.5em;
+    }
+}
+/* --- Ticket Details Styling --- */
+.ticket-details {
+    max-width: 600px;
+    margin: 50px auto;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ticket-details h2 {
     text-align: center;
+    color: #333;
     margin-bottom: 20px;
 }
 
-.welcome-message h1 {
-    font-size: 2em;
-    color: #333;
-}
-
-.welcome-message p {
-    font-size: 1.2em;
-    color: #666;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
+.ticket-details ul {
+    list-style: none;
     padding: 0;
 }
 
-.container {
-    width: 300px;
-    margin: 100px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.ticket-details ul li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 18px;
 }
 
-h2 {
+.ticket-details ul li strong {
+    font-weight: bold;
+}
+
+.btn-back {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 15px;
+    background: #6c63ff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.btn-back:hover {
+    background: #4b4f85;
+}
+/* Justera beskrivningskolumnen för att hantera textbrytning */
+td.description-column {
+    max-width: 300px; /* Begränsar bredden på textinnehållet */
+    word-wrap: break-word; /* Bryter ord som är för långa */
+    overflow-wrap: break-word; /* Fungerar liknande som word-wrap */
+    white-space: pre-wrap; /* Hanterar radbrytningar och behåller formatering */
+    text-align: left; /* Justera texten till vänster */
+}
+/* --- Ticket Details Container Styling --- */
+.ticket-details-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+.ticket-details-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+.ticket-details-card h2 {
     text-align: center;
+    color: #333;
     margin-bottom: 20px;
 }
 
-.input-box {
-    margin-bottom: 15px;
+.ticket-details-list {
+    list-style: none;
+    padding: 0;
 }
 
-label {
-    display: block;
-    margin-bottom: 5px;
+.ticket-details-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+    font-size: 18px;
 }
 
-input {
-    width: 100%;
+.ticket-details-list li strong {
+    display: inline-block;
+    width: 120px; /* Justera för bättre textjustering */
+}
+
+.ticket-details-list li span {
+    display: inline-block;
+}
+
+/* --- Textbrytning i Beskrivningsfältet --- */
+.description-text {
+    max-width: 600px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
     padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #f9f9f9; /* Lätt bakgrundsfärg för att markera textområdet */
+    margin-top: 10px;
+    line-height: 1.6;
+}
+
+/* --- Back Button Styling --- */
+.btn-back {
+    display: block;
+    margin: 20px auto;
+    padding: 12px 20px;
+    background: #6c63ff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+    width: 200px;
+}
+
+.btn-back:hover {
+    background: #4b4f85;
+}
+.filter-form {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.filter-form label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.filter-form select {
+    padding: 8px;
+    margin-right: 20px;
     border: 1px solid #ddd;
     border-radius: 5px;
 }
 
-button {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    background: #333;
+.filter-form button {
+    padding: 10px 15px;
+    background: #6c63ff;
     color: white;
+    border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 
-button:hover {
-    background: #555;
+.filter-form button:hover {
+    background: #4b4f85;
 }
 
-.error-message {
-    color: red;
-    text-align: center;
+.attachment-section {
+    margin-top: 10px;
+}
+
+.ticket-image {
+    max-width: 400px;
+    max-height: 300px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.btn-download {
+    display: inline-block;
+    padding: 10px 15px;
+    background: #6c63ff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.btn-download:hover {
+    background: #4b4f85;
 }

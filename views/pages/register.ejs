@@ -3,28 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Register</title>
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 
 <body>
     <div class="container">
-        <h2>Login</h2>
-        <form action="/login" method="POST">
+        <h2>Register New User</h2>
+        <form action="/register" method="POST">
             <div class="input-box">
-                <label for="username">Username or Email</label>
+                <label for="username">Username</label>
                 <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-box">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
             </div>
             <div class="input-box">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <button type="submit">Login</button>
-            <% if (message) { %>
+            <button type="submit">Register</button>
+            <% if (typeof message !== 'undefined' && message) { %>
                 <p class="error-message"><%= message %></p>
-            <% } %>
+            <% } %>            
         </form>
-        <p>Don't have an account? <a href="/register">Register here</a>.</p>
+        <p>Already have an account? <a href="/login">Login here</a>.</p>
     </div>
 </body>
 

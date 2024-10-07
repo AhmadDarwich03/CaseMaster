@@ -1,0 +1,54 @@
+<%- include('./../partials/header.ejs') %>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Details</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <section class="ticket-details-container">
+        <div class="ticket-details-card">
+            <h2>Ticket ID: <%= ticket.id %></h2>
+            <ul class="ticket-details-list">
+                <li><strong>Problem:</strong> <span><%= ticket.problem %></span></li>
+                <li><strong>Description:</strong>
+                    <div class="description-text">
+                        <%= ticket.description %>
+                    </div>
+                </li>
+                <li><strong>Category:</strong> <span><%= ticket.category %></span></li>
+                <li><strong>Timestamp:</strong> <span><%= new Date(ticket.tid).toLocaleString() %></span></li>
+                <li><strong>Status:</strong> <span><%= ticket.status %></span></li>
+
+                <!-- Ny sektion för att visa uppladdad fil -->
+                <% if (ticket.imagePath) { %>
+                    <li><strong>Attachment:</strong>
+                        <div class="attachment-section">
+                            <% if (ticket.imagePath.match(/\.(jpg|jpeg|png)$/)) { %>
+                                <!-- Om filen är en bild, visa som bild -->
+                                <img src="/<%= ticket.imagePath %>" alt="Ticket Image" class="ticket-image">
+                            <% } else { %>
+                                <!-- Annars, visa en länk för att ladda ner -->
+                                <a href="/<%= ticket.imagePath %>" download class="btn-download">Download File</a>
+                            <% } %>
+                        </div>
+                    </li>
+                <% } %>
+            </ul>
+            <a href="/tickets-list" class="btn-back">Back to All Tickets</a>
+            <td>
+                <% if (ticket.status === 'open') { %>
+                    <form action="/ticket/close/<%= ticket.id %>" method="GET" style="display:inline;">
+                        <button type="submit">Close Ticket</button>
+                    </form>
+                <% } else { %>
+                    <span>Closed</span>
+                <% } %>
+            </td>
+        </div>
+    </section>
+    
+    <%- include('./../partials/footer.ejs') %>
+</body>

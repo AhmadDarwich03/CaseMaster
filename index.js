@@ -13,7 +13,7 @@ app.use(session({
     saveUninitialized: true,
     cookie: { secure: false }  // Use true for HTTPS
 }));
-
+app.use('/public/uploads', express.static(path.join(__dirname, 'public/uploads')));
 // Middleware for serving static files
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static("public"));

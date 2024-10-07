@@ -1,4 +1,6 @@
-username,password,role
-admin,$2a$10$M9fABnBEnYhm3Q9231ColOstpQJ.Z2iTBsKPMoGqJJWRC79wqhNIi,admin
-user1,$2a$10$xyDZS86ZpHsGaQkEcD0uCuu3k2tQo/Byn4S8AD4IvsTnCfOhKOXZm,user
-user2,$2a$10$XarEDya2ULge8PwIfSH2B.3bZMy1sc/K5M7Ts1eKBUlkebtTWikze,user
+username,email,password,role
+ahmad,ahmad@gmail.com,$2a$10$kqEM8klbBfo5tJitUjbMEOfpQO5fOeHANr0GdHC43BonsrMvdzsYG,admin
+abd,abd@gmail.com,$2a$10$AD7JDTKZEmGSmZwPmHI7MueR6SAdF4wyuP/xAspx6Q303EKGLPrIu,user
+maria,maria@gmail.com,$2a$10$Wa8/mxCjE.Ym2HPjMOQf4.hFxDYw3tGfaXNwOMWEGLHoNEccjbp3G,user
+john,john.doe@gmail.com,$2a$10$xUlXeXucJa2zoGJ5S0Mcreu4yQ.USiVHHWqvRVEzACHPIOr3d4FCe,user
+emily,emily.ross@gmail.com,$2a$10$giiUCvdqIY5c1aq7FdkqPepteaOiAIDD4nDEmEpv5KskdetprcJom,user
