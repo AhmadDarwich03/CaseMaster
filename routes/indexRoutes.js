@@ -4,6 +4,8 @@ const index = require("../src/index.js");
 const multer = require("multer");
 const path = require("path");
 const bcrypt = require("bcryptjs");  // Lägg till bcrypt för lösenordshashning
+const mysql = require("promise-mysql");
+const config = require("../db.json");
 
 // Middleware for session-based authentication
 function authMiddleware(req, res, next) {
@@ -74,14 +76,43 @@ router.get("/tickets-list", async (req, res) => {
     try {
         let data = {};
         data.title = "All Tickets";
+        data.userRole = req.session.userRole; // Skicka userRole till EJS-filen
 
-        // Om användaren är en vanlig användare, visa endast deras egna tickets
-        if (req.session.userRole === 'user') {
-            data.filteredTickets = await index.viewTicketsByUser(req.session.userId);  // Visa endast användarens tickets
-        } else {
-            // Om användaren är admin, visa alla tickets
-            data.filteredTickets = await index.viewTickets();
+        // Hämta filtreringsparametrar från GET-förfrågan och använd tom sträng som standard
+        const { category = "", status = "" } = req.query;
+
+        // Skicka `category` och `status` till EJS-filen
+        data.category = category;
+        data.status = status;
+
+        // Skapa en grundläggande SQL-query
+        let sql = `SELECT * FROM tickets WHERE user_id = ?`; // Visa endast tickets för den inloggade användaren som standard
+        let queryParams = [req.session.userId];
+
+        // Om användaren är admin, visa alla tickets
+        if (req.session.userRole === 'admin') {
+            sql = `SELECT * FROM tickets WHERE 1=1`; // Visa alla tickets för admins
+            queryParams = [];
         }
+
+        // Lägg till filtreringsvillkor beroende på om `category` eller `status` är ifyllda
+        if (category && category !== "") {
+            sql += ` AND category = ?`;
+            queryParams.push(category);
+        }
+
+        if (status && status !== "") {
+            sql += ` AND status = ?`;
+            queryParams.push(status);
+        }
+
+        // Hämta de filtrerade resultaten från databasen
+        const db = await mysql.createConnection(config);
+        const filteredTickets = await db.query(sql, queryParams);
+        await db.end();
+
+        // Skicka de filtrerade tickets och filtreringsparametrar till EJS-filen
+        data.filteredTickets = filteredTickets;
 
         res.render("pages/tickets-list.ejs", data);
     } catch (error) {
@@ -92,15 +123,13 @@ router.get("/tickets-list", async (req, res) => {
 
 
 // Route: Close a ticket (only accessible by the ticket owner or admin)
-router.get('/ticket/close/:id', authMiddleware, async (req, res) => {
+router.post('/ticket/close/:id', authMiddleware, async (req, res) => {
     const ticketId = req.params.id;
 
     try {
-        // Check if the user has permission to close the ticket
-        const ticket = await index.getTicketById(ticketId);
-
-        if (ticket.user_id !== req.session.userId && req.session.userRole !== 'admin') {
-            return res.status(403).send('Permission denied');
+        // Kontrollera om användaren är en administratör innan stängning
+        if (req.session.userRole !== 'admin') {
+            return res.status(403).send('Access denied: Only admins can close tickets');
         }
 
         await index.updateTicketStatus(ticketId, 'Closed');
@@ -110,6 +139,7 @@ router.get('/ticket/close/:id', authMiddleware, async (req, res) => {
         res.status(500).send('Error closing ticket');
     }
 });
+
 
 // Route: User login page
 router.get('/login', (req, res) => {

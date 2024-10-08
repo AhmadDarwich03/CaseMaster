@@ -14,29 +14,29 @@
             <a href="/create" class="btn-create-ticket">Create a New Ticket</a>
         </nav>
     </header>
-
     <main>
         <!-- Filter-formulär för category och status -->
         <form action="/tickets-list" method="GET" class="filter-form">
             <label for="category">Filter by Category:</label>
             <select name="category" id="category">
-                <option value="">All Categories</option>
-                <option value="Technical Support">Technical Support</option>
-                <option value="IT Services">IT Services</option>
-                <option value="Performance">Performance</option>
-                <option value="Account Issues">Account Issues</option>
+                <option value="" <%= !category ? "selected" : "" %>>All Categories</option>
+                <option value="Technical Support" <%= category === "Technical Support" ? "selected" : "" %>>Technical Support</option>
+                <option value="IT Services" <%= category === "IT Services" ? "selected" : "" %>>IT Services</option>
+                <option value="Performance" <%= category === "Performance" ? "selected" : "" %>>Performance</option>
+                <option value="Account Issues" <%= category === "Account Issues" ? "selected" : "" %>>Account Issues</option>
             </select>
 
             <label for="status">Filter by Status:</label>
             <select name="status" id="status">
-                <option value="">All Statuses</option>
-                <option value="open">Open</option>
-                <option value="closed">Closed</option>
+                <option value="" <%= !status ? "selected" : "" %>>All Statuses</option>
+                <option value="open" <%= status === "open" ? "selected" : "" %>>Open</option>
+                <option value="closed" <%= status === "closed" ? "selected" : "" %>>Closed</option>
             </select>
 
             <button type="submit">Filter</button>
         </form>
 
+    <main>
         <table border="1">
             <thead>
                 <tr>
@@ -61,9 +61,15 @@
                             <td><%= ticket.status %></td>
                             <td>
                                 <% if (ticket.status === 'open') { %>
-                                    <form action="/ticket/close/<%= ticket.id %>" method="GET" style="display:inline;">
-                                        <button type="submit">Close Ticket</button>
-                                    </form>
+                                    <% if (userRole === 'admin') { %>
+                                        <!-- Visa Close-knappen bara för administratörer -->
+                                        <form action="/ticket/close/<%= ticket.id %>" method="POST" style="display:inline;">
+                                            <button type="submit">Close Ticket</button>
+                                        </form>
+                                    <% } else { %>
+                                        <!-- Visa inget eller ett meddelande för vanliga användare -->
+                                        <span>Open</span>
+                                    <% } %>
                                 <% } else { %>
                                     <span>Closed</span>
                                 <% } %>
