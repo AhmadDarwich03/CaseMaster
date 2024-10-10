@@ -38,15 +38,6 @@
                 <% } %>
             </ul>
             <a href="/tickets-list" class="btn-back">Back to All Tickets</a>
-            <td>
-                <% if (ticket.status === 'open') { %>
-                    <form action="/ticket/close/<%= ticket.id %>" method="GET" style="display:inline;">
-                        <button type="submit">Close Ticket</button>
-                    </form>
-                <% } else { %>
-                    <span>Closed</span>
-                <% } %>
-            </td>
         </div>
     </section>
     

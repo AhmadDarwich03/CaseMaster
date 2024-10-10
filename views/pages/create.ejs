@@ -27,18 +27,18 @@
                 <label for="category">Choose Category</label>
                 <select name="category" id="category" required>
                     <option value="">Select Category</option>
-                    <option value="Technical Support">Technical Support</option>
-                    <option value="IT Services">IT Services</option>
-                    <option value="Account issue">Account issue</option>
-                    <option value="Performance">Performance</option>
-                    <option value="Other">Other</option>
+                    <% if (categories && categories.length > 0) { %>
+                        <% categories.forEach(category => { %>
+                            <option value="<%= category.name %>"><%= category.name %></option>
+                        <% }); %>
+                    <% } else { %>
+                        <option value="" disabled>No Categories Available</option>
+                    <% } %>
                 </select>
             </div>
 
             <label for="attachment">Attach a Picture or Document</label>
-            <!-- Se till att 'name' är korrekt och matchar Multer-konfigurationen -->
             <input type="file" id="attachment" name="attachment" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
-
 
             <div class="ticket-button">
                 <button type="submit">Create Ticket</button>

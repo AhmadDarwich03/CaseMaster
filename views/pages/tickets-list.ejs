@@ -20,10 +20,9 @@
             <label for="category">Filter by Category:</label>
             <select name="category" id="category">
                 <option value="" <%= !category ? "selected" : "" %>>All Categories</option>
-                <option value="Technical Support" <%= category === "Technical Support" ? "selected" : "" %>>Technical Support</option>
-                <option value="IT Services" <%= category === "IT Services" ? "selected" : "" %>>IT Services</option>
-                <option value="Performance" <%= category === "Performance" ? "selected" : "" %>>Performance</option>
-                <option value="Account Issues" <%= category === "Account Issues" ? "selected" : "" %>>Account Issues</option>
+                <% categories.forEach(cat => { %>
+                    <option value="<%= cat.name %>" <%= category === cat.name ? "selected" : "" %>><%= cat.name %></option>
+                <% }) %>
             </select>
 
             <label for="status">Filter by Status:</label>
@@ -36,7 +35,6 @@
             <button type="submit">Filter</button>
         </form>
 
-    <main>
         <table border="1">
             <thead>
                 <tr>
@@ -62,12 +60,10 @@
                             <td>
                                 <% if (ticket.status === 'open') { %>
                                     <% if (userRole === 'admin') { %>
-                                        <!-- Visa Close-knappen bara för administratörer -->
                                         <form action="/ticket/close/<%= ticket.id %>" method="POST" style="display:inline;">
                                             <button type="submit">Close Ticket</button>
                                         </form>
                                     <% } else { %>
-                                        <!-- Visa inget eller ett meddelande för vanliga användare -->
                                         <span>Open</span>
                                     <% } %>
                                 <% } else { %>

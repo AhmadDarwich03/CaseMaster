@@ -103,8 +103,35 @@ async function viewTicketsByUser(userId) {
     return res;
 }
 
+async function addCategory(name) {
+    const db = await mysql.createConnection(config);
+    const sql = `INSERT INTO categories (name) VALUES (?);`;
+    await db.query(sql, [name]);
+    await db.end();
+}
+
+// Funktion för att hämta alla kategorier
+async function viewCategories() {
+    const db = await mysql.createConnection(config);
+    const sql = `SELECT * FROM categories;`;
+    const res = await db.query(sql);
+    await db.end();
+    return res;
+}
+
+// Funktion för att ta bort en kategori
+async function deleteCategory(id) {
+    const db = await mysql.createConnection(config);
+    const sql = `DELETE FROM categories WHERE id = ?;`;
+    await db.query(sql, [id]);
+    await db.end();
+}
+
 // Exportera alla funktioner så att de kan användas i routes
 module.exports = {
+    deleteCategory,
+    addCategory,
+    viewCategories,
     connectDB,               // Exportera connectDB-funktionen
     getUserByUsernameOrEmail,       // Hämta användare baserat på användarnamn
     addUser,                 // Lägg till en ny användare

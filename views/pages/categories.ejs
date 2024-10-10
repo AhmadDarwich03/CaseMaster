@@ -1,0 +1,56 @@
+<%- include('./../partials/header.ejs') %>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Management</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <section class="category-container">
+        <h2>Manage Categories</h2>
+
+        <!-- Formulär för att lägga till ny kategori -->
+        <form action="/add-category" method="POST" class="category-form">
+            <label for="name">New Category Name:</label>
+            <input type="text" id="name" name="name" required>
+            <button type="submit">Add Category</button>
+        </form>
+
+        <!-- Lista över befintliga kategorier -->
+        <h3>Existing Categories</h3>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Category Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (categories.length > 0) { %>
+                    <% categories.forEach(category => { %>
+                        <tr>
+                            <td><%= category.id %></td>
+                            <td><%= category.name %></td>
+                            <td>
+                                <form action="/delete-category/<%= category.id %>" method="POST" style="display:inline;">
+                                    <button type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="3">No categories found.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+
+        <a href="/tickets-list" class="back-button">Back to Tickets</a>
+    </section>
+</body>
+
+<%- include('./../partials/footer.ejs') %>

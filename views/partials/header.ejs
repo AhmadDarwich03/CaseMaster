@@ -1,12 +1,16 @@
-<link rel="icon" href="/css/favicon.ico" type="image/x-icon">
-
-<header>
-    <a href="/">
-        <h1>CaseMaster</h1>
-    </a>
-    <nav>
+<nav>
+    <% if (session && session.userId) { %>
         <a href="/tickets-list">View Tickets</a>
         <a href="/create">Create Ticket</a>
-        <a href="/logout">logout</a>
-    </nav>
-</header>
+
+        <% if (session.userRole === 'admin') { %>
+            <a href="/categories">Manage Categories</a>
+        <% } %>
+
+        <a href="/logout">Logout</a>
+        <span>Welcome, <%= session.username %></span>  <!-- Visa användarnamn -->
+    <% } else { %>
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+    <% } %>
+</nav>

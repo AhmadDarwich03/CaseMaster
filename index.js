@@ -29,6 +29,10 @@ app.use((req, res, next) => {
     console.log(`${new Date().toLocaleString()} Got a request on ${req.path} (${req.method})`);
     next();
 });
+app.use((req, res, next) => {
+    res.locals.session = req.session;
+    next();
+});
 
 // Use the routes from indexRoutes.js
 app.use("/", indexRoutes);
