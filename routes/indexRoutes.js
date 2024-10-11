@@ -176,7 +176,7 @@ router.post('/login', async (req, res) => {
             req.session.userId = user.id;
             req.session.userRole = user.role;
             req.session.username = user.username;
-            return res.redirect('/tickets-list');
+            return res.redirect('/');
         } else {
             res.render('pages/login.ejs', { message: 'Invalid username, email, or password' });
         }

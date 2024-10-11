@@ -4,18 +4,20 @@ body {
     padding: 0;
     font-family: Arial, sans-serif;
     background-image: url('/images/bakgrund.webp'); /* Set the background image */
-    background-color: #0b0a0a; /* Fallback color if the image does not load */
-    background-size: cover; /* Make the background image cover the entire page */
-    background-position: center; /* Center the image */
-    background-repeat: no-repeat; /* Prevent the background from repeating */
+    background-color: #121212; /* Mörkare fallback-färg */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #ffffff; /* Ändra textfärgen till vit för kontrast */
 }
 
 /* Header styles */
 header {
-    background-color: #007bff;
-    color: rgb(15, 5, 5);
+    background-color: #2C3E50; /* Mörkblå nyans */
+    color: #ecf0f1; /* Ljus textfärg */
     padding: 20px;
     text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 header h1 {
@@ -25,6 +27,7 @@ header h1 {
 
 header p {
     font-size: 1.2em;
+    color: #bdc3c7; /* Ljusare grå färg för undertexter */
 }
 
 nav {
@@ -32,7 +35,7 @@ nav {
 }
 
 nav a {
-    color: white;
+    color: #ecf0f1;
     text-decoration: none;
     font-weight: bold;
     margin: 0 15px;
@@ -41,6 +44,49 @@ nav a {
     transition: background-color 0.3s ease-in-out;
 }
 
+nav a:hover {
+    background-color: #34495e; /* Mörkare nyans vid hover */
+}
+
+/* Main section - Flexbox styles for vertical and horizontal centering */
+main {
+    display: flex;
+    justify-content: center; /* Horisontellt centrera */
+    align-items: center; /* Vertikalt centrera */
+    height: calc(100vh - 100px); /* Justera höjden så att den inte överlappar header och footer */
+    flex-direction: column; /* Lägg elementen i en kolumn */
+    text-align: center; /* Centrera textinnehållet */
+}
+
+/* Styling for the welcome message */
+h1.welcome-title {
+    font-size: 4em;
+    font-weight: bold;
+    color: #ecf0f1;
+}
+p.welcome-subtitle {
+    font-size: 1.2em;
+    color: #bdc3c7; /* Ljusare text för beskrivningar */
+    margin-bottom: 40px;
+}
+
+/* Styling for the Create Ticket button */
+.center-button a {
+    background-color: #3498db; /* Klarblå nyans */
+    color: white;
+    padding: 15px 30px;
+    text-decoration: none;
+    font-size: 18px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.center-button a:hover {
+    background-color: #2980b9; /* Mörkare blå vid hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
 nav a:hover {
     background-color: #0056b3;
 }
@@ -164,60 +210,38 @@ tr:hover {
     margin-bottom: 15px;
 }
 
-/* Gör hela sidan till en flex-container */
-body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;  /* Gör att body och html täcker hela höjden */
-}
-
-.wrapper {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;  /* Gör wrapper lika hög som hela fönstret */
-}
-
-/* Main-innehållet ska expandera för att fylla ut mellan header och footer */
-main {
-    flex: 1;  /* Flex: 1 gör att main tar upp all extra höjd */
-    padding: 20px;  /* Lägg till lite padding för bättre layout */
-}
-
 /* Footer styles */
+/* Footer-styling */
 footer {
-    background-color: #f9f8f8;
-    color: rgb(6, 5, 5);
-    padding: 10px 0;  /* Minska padding för att göra den smalare */
+    background-color: #333333;
+    color: #ffffff;
+    padding: 20px;
     text-align: center;
-    width: 100%;  /* Full bredd */
-    position: relative;  /* Gör att den ligger längst ner utan att överlappa */
+    width: 100%;
+    position: relative; /* Se till att positioneringen inte överlappar */
     bottom: 0;
-    font-size: 14px;  /* Minska typsnittsstorleken för en mer kompakt stil */
+    margin-top: auto; /* För att trycka ner footern längst ner */
 }
 
-/* Konfiguration av container för footer-innehåll */
+/* Gör innehållet i footern lite mindre */
 .footer-container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    max-width: 900px;  /* Minska maxbredden för en smalare layout */
+    max-width: 900px;
     margin: 0 auto;
-    padding: 0 10px;  /* Lägg till lite sid-padding för bättre utseende */
+    padding: 0 10px;
 }
 
 .footer-container div {
-    margin: 10px;  /* Minskat marginalen mellan boxarna */
+    margin: 10px;
 }
 
-/* Footer-sektionerna */
 .footer-about h3, .footer-links h4, .footer-contact h4 {
-    font-size: 16px;  /* Minska rubrikernas typsnittsstorlek */
-    margin-bottom: 6px;  /* Minska avståndet mellan rubrik och innehåll */
+    font-size: 16px;
+    margin-bottom: 6px;
 }
 
 .footer-about p {
-    font-size: 12px;  /* Minska typsnitt för texten */
-    line-height: 1.4;  /* Minska radavståndet för mer kompakt text */
+    font-size: 12px;
+    line-height: 1.4;
 }
 
 .footer-links ul {
@@ -226,7 +250,7 @@ footer {
 }
 
 .footer-links ul li {
-    margin-bottom: 6px;  /* Justerat avståndet */
+    margin-bottom: 6px;
 }
 
 .footer-links ul li a {
@@ -240,43 +264,16 @@ footer {
 }
 
 .footer-contact p {
-    margin: 3px 0;  /* Minska marginalen för en kompakt stil */
-    font-size: 12px;  /* Minska typsnittet för kontaktinformationen */
+    margin: 3px 0;
+    font-size: 12px;
 }
 
 .footer-bottom {
     margin-top: 10px;
-    font-size: 12px;  /* Minska typsnittet */
+    font-size: 12px;
     border-top: 1px solid #444;
-    padding: 5px 0;  /* Minska padding */
+    padding: 5px 0;
 }
-
-/* Responsive styles */
-@media (max-width: 768px) {
-    .footer-container {
-        flex-direction: column;  /* Ändrar layouten till kolumn på små skärmar */
-        align-items: center;
-    }
-
-    .footer-container div {
-        margin: 5px 0;  /* Ökad marginal för bättre vertikal separation */
-    }
-
-    .footer-about h3, .footer-links h4, .footer-contact h4 {
-        font-size: 14px;  /* Minska storleken ytterligare för små skärmar */
-    }
-
-    .footer-about p, .footer-contact p {
-        font-size: 12px;  /* Justera textstorlek för små skärmar */
-    }
-
-    .footer-bottom {
-        font-size: 12px;  /* Justerat typsnittet */
-        padding: 5px 0;  /* Minska padding ytterligare */
-    }
-}
-
-
 
 textarea {
     resize: vertical; /* Tillåter användaren att dra och ändra storleken vertikalt */
