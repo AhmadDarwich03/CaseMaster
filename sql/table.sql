@@ -6,7 +6,7 @@ CREATE TABLE users(
     username VARCHAR(100) UNIQUE,
     email VARCHAR(255) UNIQUE,
     password VARCHAR(255),
-    role ENUM('user', 'admin') DEFAULT 'user'
+    role ENUM('user', 'admin', 'agent')
 );
 
 CREATE TABLE tickets (

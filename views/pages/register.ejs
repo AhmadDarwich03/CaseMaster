@@ -23,6 +23,14 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
+            <div class="input-box">
+                <label for="role">Choose Role</label>
+                <select name="role" id="role" required>
+                    <option value="">Select Role</option>
+                    <option value="agent">Agent</option>
+                    <option value="user">User</option>
+                </select>
+            </div>
             <button type="submit">Register</button>
             <% if (typeof message !== 'undefined' && message) { %>
                 <p class="error-message"><%= message %></p>

@@ -15,13 +15,13 @@ function authMiddleware(req, res, next) {
     next();
 }
 
-// Middleware för admin-auktorisering
-function adminMiddleware(req, res, next) {
-    if (!req.session || req.session.userRole !== 'admin') {
-        return res.status(403).send('Access denied: Admins only');  // Nekad åtkomst om inte admin
+function adminOrAgentMiddleware(req, res, next) {
+    if (req.session.userRole === 'admin' || req.session.userRole === 'agent') {
+        return next(); // If user is admin or agent, proceed
     }
-    next();
+    return res.status(403).send('Access denied: Admins and Agents only');
 }
+
 
 // Konfigurera Multer för filuppladdningar
 const storage = multer.diskStorage({
@@ -94,7 +94,7 @@ router.get("/tickets-list", authMiddleware, async (req, res) => {
         let queryParams = [req.session.userId];
 
         // Om användaren är admin, visa alla tickets
-        if (req.session.userRole === 'admin') {
+        if (req.session.userRole === 'admin', 'agent') {
             sql = `SELECT * FROM tickets WHERE 1=1`; // Visa alla tickets för admins
             queryParams = [];
         }
@@ -127,7 +127,7 @@ router.get("/tickets-list", authMiddleware, async (req, res) => {
 
 
 // Route: Hantera kategorier (endast för admin)
-router.get("/categories", authMiddleware, adminMiddleware, async (req, res) => {
+router.get("/categories", authMiddleware, adminOrAgentMiddleware, async (req, res) => {
     try {
         const categories = await index.viewCategories();
         res.render("pages/categories.ejs", { categories });
@@ -137,8 +137,9 @@ router.get("/categories", authMiddleware, adminMiddleware, async (req, res) => {
     }
 });
 
+
 // Lägg till ny kategori (endast för admin)
-router.post("/add-category", authMiddleware, adminMiddleware, async (req, res) => {
+router.post("/add-category", authMiddleware, adminOrAgentMiddleware,async (req, res) => {
     const { name } = req.body;
     try {
         await index.addCategory(name);
@@ -150,7 +151,7 @@ router.post("/add-category", authMiddleware, adminMiddleware, async (req, res) =
 });
 
 // Ta bort en kategori (endast för admin)
-router.post("/delete-category/:id", authMiddleware, adminMiddleware, async (req, res) => {
+router.post("/delete-category/:id", authMiddleware, adminOrAgentMiddleware,async (req, res) => {
     const categoryId = req.params.id;
     try {
         await index.deleteCategory(categoryId);
@@ -202,17 +203,22 @@ router.get("/register", (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, email, password, role } = req.body;  // Make sure role is included
 
     try {
+        // Hash the password before saving to the database
         const hashedPassword = await bcrypt.hash(password, 10);
-        await index.addUser(username, email, hashedPassword);
-        res.redirect("/login");
+
+        // Add the user to the database
+        await index.addUser(username, email, hashedPassword, role);
+
+        res.redirect("/login");  // Redirect to login after successful registration
     } catch (error) {
         console.error("Error registering new user:", error);
         res.status(500).send("Internal Server Error");
     }
 });
+
 
 // Route för att visa detaljerna för en specifik ticket
 router.get("/ticket-details/:id", authMiddleware, async (req, res) => {

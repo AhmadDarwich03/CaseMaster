@@ -26,7 +26,7 @@ async function addUser(username, email, hashedPassword) {
     const db = await mysql.createConnection(config);
 
     let sql = `INSERT INTO users (username, email, password, role)
-               VALUES (?, ?, ?, 'user');`;
+               VALUES (?, ?, ?, ?);`;
 
     await db.query(sql, [username, email, hashedPassword]);
     await db.end();

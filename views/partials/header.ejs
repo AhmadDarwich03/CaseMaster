@@ -4,9 +4,13 @@
         <a href="/tickets-list">View Tickets</a>
         <a href="/create">Create Ticket</a>
 
-        <% if (session.userRole === 'admin') { %>
+        <% if (session.userRole === 'admin', 'agent') { %>
             <a href="/categories">Manage Categories</a>
         <% } %>
+        <% if (session.userRole === 'admin') { %>
+            <a href="/register">Create a new account</a>
+        <% } %>
+ 
 
         <a href="/logout">Logout</a>
         <span>Welcome, <%= session.username %></span>  <!-- Visa användarnamn -->
