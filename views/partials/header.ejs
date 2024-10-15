@@ -4,7 +4,7 @@
         <a href="/tickets-list">View Tickets</a>
         <a href="/create">Create Ticket</a>
 
-        <% if (session.userRole === 'admin', 'agent') { %>
+        <% if (session.userRole === 'admin' || session.userRole === 'agent') { %>
             <a href="/categories">Manage Categories</a>
         <% } %>
         <% if (session.userRole === 'admin') { %>

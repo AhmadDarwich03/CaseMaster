@@ -59,7 +59,8 @@
                             <td><%= ticket.status %></td>
                             <td>
                                 <% if (ticket.status === 'open') { %>
-                                    <% if (userRole === 'admin', 'agent') { %>
+                                    <!-- Administratörer, agenter och ägare kan stänga tickets -->
+                                    <% if (userRole === 'admin' || userRole === 'agent') { %>
                                         <form action="/ticket/close/<%= ticket.id %>" method="POST" style="display:inline;">
                                             <button type="submit">Close Ticket</button>
                                         </form>
@@ -70,6 +71,7 @@
                                     <span>Closed</span>
                                 <% } %>
                             </td>
+                                                      
                         </tr>
                     <% }) %>
                 <% } else { %>

@@ -73,7 +73,6 @@ router.post("/create", authMiddleware, upload.single('attachment'), async (req, 
     }
 });
 
-// Route: Visa alla tickets (endast inloggade användare)
 router.get("/tickets-list", authMiddleware, async (req, res) => {
     try {
         let data = {};
@@ -89,14 +88,18 @@ router.get("/tickets-list", authMiddleware, async (req, res) => {
         const categories = await index.viewCategories();
         data.categories = categories;
 
-        // Skapa en grundläggande SQL-query
-        let sql = `SELECT * FROM tickets WHERE user_id = ?`; // Visa endast tickets för den inloggade användaren som standard
-        let queryParams = [req.session.userId];
+        // SQL-fråga för att hämta tickets
+        let sql;
+        let queryParams;
 
-        // Om användaren är admin, visa alla tickets
-        if (req.session.userRole === 'admin', 'agent') {
-            sql = `SELECT * FROM tickets WHERE 1=1`; // Visa alla tickets för admins
+        // Om användaren är admin eller agent, visa alla tickets
+        if (req.session.userRole === 'admin' || req.session.userRole === 'agent') {
+            sql = `SELECT * FROM tickets WHERE 1=1`; // Visa alla tickets för admin och agenter
             queryParams = [];
+        } else {
+            // Visa endast tickets för inloggad användare om det inte är admin eller agent
+            sql = `SELECT * FROM tickets WHERE user_id = ?`;
+            queryParams = [req.session.userId];
         }
 
         // Lägg till filtreringsvillkor beroende på om `category` eller `status` är ifyllda
@@ -124,6 +127,8 @@ router.get("/tickets-list", authMiddleware, async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 });
+
+
 
 
 // Route: Hantera kategorier (endast för admin)
@@ -234,5 +239,30 @@ router.get("/ticket-details/:id", authMiddleware, async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 });
+
+router.post('/ticket/close/:id', authMiddleware, async (req, res) => {
+    const ticketId = req.params.id;
+
+    try {
+        // Hämta ticket från databasen
+        const ticket = await index.getTicketById(ticketId);
+
+        // Kontrollera om den inloggade användaren äger ticketen eller är admin/agent
+        if (ticket.user_id !== req.session.userId && req.session.userRole !== 'admin' && req.session.userRole !== 'agent') {
+            return res.status(403).send('Access denied: You can only close your own tickets');
+        }
+
+        // Uppdatera ticketens status till 'Closed'
+        await index.updateTicketStatus(ticketId, 'Closed');
+
+        res.redirect('/tickets-list');
+    } catch (err) {
+        console.error('Error closing ticket:', err);
+        res.status(500).send('Error closing ticket');
+    }
+});
+
+
+
 
 module.exports = router;

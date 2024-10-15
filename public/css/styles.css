@@ -8,7 +8,7 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    color: #ffffff; /* Ändra textfärgen till vit för kontrast */
+    color: #090808; /* Ändra textfärgen till vit för kontrast */
 }
 
 /* Header styles */
@@ -134,7 +134,7 @@ button {
 }
 
 button:hover {
-    background-color: #218838;
+    background-color: #e70c0c;
 }
 
 .center-button {
@@ -494,9 +494,14 @@ td.description-column {
     background: #4b4f85;
 }
 .filter-form {
+
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
+    width: 100%;
     margin-bottom: 20px;
+    flex-flow: row;
+    /* justify-items: center; */
+    align-items: center;
 }
 
 .filter-form label {
