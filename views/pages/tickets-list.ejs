@@ -17,7 +17,7 @@
     <main>
         <!-- Filter-formulär för category och status -->
         <form action="/tickets-list" method="GET" class="filter-form">
-            <label for="category">Filter by Category:</label>
+            <label for="category"></label>
             <select name="category" id="category">
                 <option value="" <%= !category ? "selected" : "" %>>All Categories</option>
                 <% categories.forEach(cat => { %>
@@ -25,7 +25,7 @@
                 <% }) %>
             </select>
 
-            <label for="status">Filter by Status:</label>
+            <label for="status"></label>
             <select name="status" id="status">
                 <option value="" <%= !status ? "selected" : "" %>>All Statuses</option>
                 <option value="open" <%= status === "open" ? "selected" : "" %>>Open</option>

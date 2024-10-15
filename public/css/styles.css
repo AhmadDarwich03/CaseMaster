@@ -517,12 +517,11 @@ td.description-column {
 }
 
 .filter-form button {
-    padding: 10px 15px;
     background: #6c63ff;
     color: white;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
+    margin: 0px;
 }
 
 .filter-form button:hover {
