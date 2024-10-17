@@ -127,6 +127,42 @@ async function deleteCategory(id) {
     await db.end();
 }
 
+async function getResolutionByTicketId(ticketId) {
+    const db = await mysql.createConnection(config);
+    const sql = `
+        SELECT tp.*, u.username AS agent_name
+        FROM ticket_progress AS tp
+        JOIN users u ON tp.agent_id = u.id
+        WHERE tp.ticket_id = ?
+        ORDER BY tp.created_at ASC;
+    `;
+    const rows = await db.query(sql, [ticketId]);
+    await db.end();
+    console.log("ROWS: ",rows);
+    return rows; // This should return an array of progress steps with the agent name
+}
+
+
+
+
+async function addProgress (progressData) {
+    const db = await mysql.createConnection(config);
+    const sql = 'INSERT INTO ticket_progress (ticket_id, agent_id, action, comment) VALUES (?, ?, ?, ?)';
+    const params = [progressData.ticket_id, progressData.agent_id, progressData.action, progressData.comment];
+    await db.query(sql, params);
+    await db.end();
+}
+
+
+// Fetch ticket details by ID
+async function fetchTicketDetailsById(ticketId) {
+    const db = await mysql.createConnection(config);
+    const result = await db.query('SELECT * FROM tickets WHERE id = ?', [ticketId]);
+    await db.end();
+    return result[0];
+}
+
+
 // Exportera alla funktioner så att de kan användas i routes
 module.exports = {
     deleteCategory,
@@ -140,5 +176,8 @@ module.exports = {
     updateTicketStatus,      // Uppdatera ticket-status
     getTicketById,            // Hämta en ticket baserat på ID
     filterTickets,
-    viewTicketsByUser
+    viewTicketsByUser,
+    getResolutionByTicketId,
+    addProgress,
+    fetchTicketDetailsById
 };

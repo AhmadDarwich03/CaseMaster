@@ -24,6 +24,17 @@ CREATE TABLE IF NOT EXISTS categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL
 );
+CREATE TABLE ticket_progress (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ticket_id INT NOT NULL,
+    agent_id INT NOT NULL,
+    action VARCHAR(255) NOT NULL,
+    comment TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (ticket_id) REFERENCES tickets(id),
+    FOREIGN KEY (agent_id) REFERENCES users(id)
+) ENGINE=InnoDB;
+
 
 
 source procedures.sql;

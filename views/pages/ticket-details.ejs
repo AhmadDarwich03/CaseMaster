@@ -22,21 +22,59 @@
                 <li><strong>Timestamp:</strong> <span><%= new Date(ticket.tid).toLocaleString() %></span></li>
                 <li><strong>Status:</strong> <span><%= ticket.status %></span></li>
 
-                <!-- Ny sektion för att visa uppladdad fil -->
+                <!-- Display uploaded file if exists -->
                 <% if (ticket.imagePath) { %>
                     <li><strong>Attachment:</strong>
                         <div class="attachment-section">
                             <% if (ticket.imagePath.match(/\.(jpg|jpeg|png)$/)) { %>
-                                <!-- Om filen är en bild, visa som bild -->
+                                <!-- Display as image if it's a picture -->
                                 <img src="/<%= ticket.imagePath %>" alt="Ticket Image" class="ticket-image">
                             <% } else { %>
-                                <!-- Annars, visa en länk för att ladda ner -->
+                                <!-- Provide download link for non-image files -->
                                 <a href="/<%= ticket.imagePath %>" download class="btn-download">Download File</a>
                             <% } %>
                         </div>
                     </li>
                 <% } %>
             </ul>
+            
+            <h2>Resolution Progress</h2>
+            <% if (typeof progress !== 'undefined' && progress.length > 0) { %>
+                <% progress.forEach(function(step) { %>
+                    <div class="progress-step">
+                        <p><strong>Date:</strong> <%= new Date(step.created_at).toLocaleString() %></p>
+                        <p><strong>Agent:</strong> <%= step.agent_id %></p>
+                        <p><strong>Action:</strong> <%= step.action %></p>
+                        <% if (step.comment) { %>
+                            <p><strong>Comment:</strong> <%= step.comment %></p>
+                        <% } %>
+                    </div>
+                    <hr>
+                <% }); %>
+            <% } else { %>
+                <p>No progress updates available.</p>
+            <% } %>
+            
+            
+            
+            
+            
+            
+            
+            <% if (session.userRole === 'admin' || session.userRole === 'agent') { %>
+                <h2>Add Progress Update</h2>
+                <form action="/ticket-details/<%= ticket.id %>/add-progress" method="POST">
+                    <label for="action">Action Taken:</label>
+                    <input type="text" name="action" id="action" required>
+                
+                    <label for="comment">Comment:</label>
+                    <textarea name="comment" id="comment"></textarea>
+                
+                    <button type="submit">Add Progress</button>
+                </form>                
+            <% } %>
+            
+            
             <a href="/tickets-list" class="btn-back">Back to All Tickets</a>
         </div>
     </section>

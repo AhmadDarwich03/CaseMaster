@@ -9,6 +9,8 @@ const config = require("../db.json");
 
 // Middleware för session-baserad autentisering
 function authMiddleware(req, res, next) {
+    console.log("Auth Middleware Hit");
+
     if (!req.session || !req.session.userId) {
         return res.redirect('/login');  // Omdirigera till login om användaren inte är inloggad
     }
@@ -225,20 +227,6 @@ router.post("/register", async (req, res) => {
 });
 
 
-// Route för att visa detaljerna för en specifik ticket
-router.get("/ticket-details/:id", authMiddleware, async (req, res) => {
-    const ticketId = req.params.id;
-
-    try {
-        let data = {};
-        data.title = "Ticket Details";
-        data.ticket = await index.getTicketById(ticketId);
-        res.render("pages/ticket-details.ejs", data);
-    } catch (error) {
-        console.error("Error fetching ticket details:", error);
-        res.status(500).send("Internal Server Error");
-    }
-});
 
 router.post('/ticket/close/:id', authMiddleware, async (req, res) => {
     const ticketId = req.params.id;
@@ -261,6 +249,56 @@ router.post('/ticket/close/:id', authMiddleware, async (req, res) => {
         res.status(500).send('Error closing ticket');
     }
 });
+
+router.get("/ticket-details/:id", authMiddleware, async (req, res) => {
+    const ticketId = req.params.id;
+    console.log(ticketId);
+    try {
+        // Fetch ticket details
+        let data = {};
+        data.title = "Ticket Details";
+        data.ticket = await index.getTicketById(ticketId); // Assuming this fetches ticket details
+        data.userRole = req.session.userRole;
+
+        const progressData = await index.getResolutionByTicketId(ticketId);
+        data.progress = progressData;
+        
+        console.log("PROGRESSS", progressData);
+
+        // Render the ticket details page
+        res.render("pages/ticket-details.ejs", data);
+    } catch (error) {
+        console.error("Error fetching ticket details:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+
+
+
+router.post('/ticket-details/:id/add-progress', authMiddleware, adminOrAgentMiddleware, async (req, res) => {
+    console.log("Request Body:", req.body); // Log form data
+    console.log("Ticket ID:", req.params.id); // Log ticket ID
+
+    const ticketId = req.params.id;
+    const agentId = req.session.userId;
+    const { action, comment } = req.body;
+
+    try {
+        await index.addProgress({
+            ticket_id: ticketId,
+            agent_id: agentId,
+            action,
+            comment
+        });
+
+        res.redirect(`/ticket-details/${ticketId}`);
+    } catch (error) {
+        console.error("Error adding progress update:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 
 
 

@@ -8,7 +8,7 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    color: #090808; /* Ändra textfärgen till vit för kontrast */
+    color: #000000; /* Ändra textfärgen till vit för kontrast */
 }
 
 /* Header styles */
@@ -556,4 +556,37 @@ td.description-column {
 main {
     min-height: calc(100vh - 180px);  /* Justera min-höjden baserat på sidans höjd */
     margin-bottom: 60px;  /* Extra utrymme under main-innehållet */
+}
+
+.replies {
+    margin-left: 20px;
+    padding-left: 10px;
+    border-left: 2px solid #ddd;
+}
+
+.reply {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f0f0f0;
+}
+
+.reply-form {
+    margin-top: 10px;
+}
+
+
+.progress-step {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.progress-step p {
+    margin: 5px 0;
+}
+
+.progress-step strong {
+    color: #333;
 }
