@@ -3,6 +3,8 @@ const express = require("express");
 const session = require("express-session");
 const path = require("path");
 const indexRoutes = require("./routes/indexRoutes.js");
+require('dotenv').config();
+
 
 const app = express();
 const port = 1331;

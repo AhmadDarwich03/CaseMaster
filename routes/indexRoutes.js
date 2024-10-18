@@ -6,11 +6,10 @@ const path = require("path");
 const bcrypt = require("bcryptjs");  // Lägg till bcrypt för lösenordshashning
 const mysql = require("promise-mysql");
 const config = require("../db.json");
+const { sendTicketUpdateEmail } = require('../src/services/emailService');
 
 // Middleware för session-baserad autentisering
 function authMiddleware(req, res, next) {
-    console.log("Auth Middleware Hit");
-
     if (!req.session || !req.session.userId) {
         return res.redirect('/login');  // Omdirigera till login om användaren inte är inloggad
     }
@@ -219,7 +218,7 @@ router.post("/register", async (req, res) => {
         // Add the user to the database
         await index.addUser(username, email, hashedPassword, role);
 
-        res.redirect("/login");  // Redirect to login after successful registration
+        res.redirect("/");  // Redirect to login after successful registration
     } catch (error) {
         console.error("Error registering new user:", error);
         res.status(500).send("Internal Server Error");
@@ -232,16 +231,21 @@ router.post('/ticket/close/:id', authMiddleware, async (req, res) => {
     const ticketId = req.params.id;
 
     try {
-        // Hämta ticket från databasen
-        const ticket = await index.getTicketById(ticketId);
+        // Fetch the ticket and user information
+        const ticket = await index.getTicketById(ticketId); // Assuming this fetches the ticket
+        const user = await index.getUserById(ticket.user_id); // Assuming this fetches the user by ID
 
-        // Kontrollera om den inloggade användaren äger ticketen eller är admin/agent
+        // Check if the user closing the ticket is the owner or an admin/agent
         if (ticket.user_id !== req.session.userId && req.session.userRole !== 'admin' && req.session.userRole !== 'agent') {
-            return res.status(403).send('Access denied: You can only close your own tickets');
+            return res.status(403).send('Access denied');
         }
 
-        // Uppdatera ticketens status till 'Closed'
+        // Update the ticket status to 'Closed'
         await index.updateTicketStatus(ticketId, 'Closed');
+
+        // Send email notification to the user about ticket closure
+        const updateMessage = `Your ticket has been closed by ${req.session.username}.`;
+        await sendTicketUpdateEmail(user.email, ticketId, updateMessage); // Send the email
 
         res.redirect('/tickets-list');
     } catch (err) {
@@ -277,14 +281,12 @@ router.get("/ticket-details/:id", authMiddleware, async (req, res) => {
 
 
 router.post('/ticket-details/:id/add-progress', authMiddleware, adminOrAgentMiddleware, async (req, res) => {
-    console.log("Request Body:", req.body); // Log form data
-    console.log("Ticket ID:", req.params.id); // Log ticket ID
-
     const ticketId = req.params.id;
     const agentId = req.session.userId;
     const { action, comment } = req.body;
 
     try {
+        // Add the progress update to the database
         await index.addProgress({
             ticket_id: ticketId,
             agent_id: agentId,
@@ -292,12 +294,22 @@ router.post('/ticket-details/:id/add-progress', authMiddleware, adminOrAgentMidd
             comment
         });
 
+        // Fetch ticket and user information to send the update email
+        const ticket = await index.getTicketById(ticketId);
+        const user = await index.getUserById(ticket.user_id); // Get the user who owns the ticket
+
+        // Prepare the email content
+        const updateMessage = `A new progress update has been added to your ticket by ${req.session.username}: <strong>${action}</strong>.<br>Comment: ${comment || 'No comment'}`;
+        await sendTicketUpdateEmail(user.email, ticketId, updateMessage); // Send the email
+
+        // Redirect back to the ticket details page
         res.redirect(`/ticket-details/${ticketId}`);
     } catch (error) {
         console.error("Error adding progress update:", error);
         res.status(500).send("Internal Server Error");
     }
 });
+
 
 
 

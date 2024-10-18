@@ -22,13 +22,13 @@ async function getUserByUsernameOrEmail(identifier) {
 
 
 // Lägg till en användare i databasen
-async function addUser(username, email, hashedPassword) {
+async function addUser(username, email, hashedPassword, role) {
     const db = await mysql.createConnection(config);
 
     let sql = `INSERT INTO users (username, email, password, role)
                VALUES (?, ?, ?, ?);`;
 
-    await db.query(sql, [username, email, hashedPassword]);
+    await db.query(sql, [username, email, hashedPassword, role]);
     await db.end();
 }
 
@@ -162,6 +162,16 @@ async function fetchTicketDetailsById(ticketId) {
     return result[0];
 }
 
+// Fetch user information by user ID
+async function getUserById(userId) {
+    const db = await connectDB(); // Assuming you have this function to connect to the database
+    const sql = `SELECT * FROM users WHERE id = ?`;
+    const result = await db.query(sql, [userId]);
+    await db.end();
+    return result[0]; // Return the user object
+}
+
+
 
 // Exportera alla funktioner så att de kan användas i routes
 module.exports = {
@@ -179,5 +189,6 @@ module.exports = {
     viewTicketsByUser,
     getResolutionByTicketId,
     addProgress,
-    fetchTicketDetailsById
+    fetchTicketDetailsById,
+    getUserById
 };
