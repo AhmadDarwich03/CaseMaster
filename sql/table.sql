@@ -10,15 +10,17 @@ CREATE TABLE users(
 );
 
 CREATE TABLE tickets (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    problem VARCHAR(50),
-    description LONGTEXT,
-    category VARCHAR(50),
-    tid TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    status VARCHAR(20),
-    imagePath VARCHAR(255),
-    user_id INT
+    id INT AUTO_INCREMENT PRIMARY KEY,  -- Ticket ID (Primary Key)
+    problem VARCHAR(50),                -- Problem title/short description
+    description LONGTEXT,               -- Full description of the problem
+    category VARCHAR(50),               -- Ticket category
+    tid TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Timestamp when the ticket is created
+    status VARCHAR(20),                 -- Status of the ticket (e.g., 'open', 'closed')
+    imagePath VARCHAR(255),             -- Path to any uploaded image for the ticket
+    user_id INT,                        -- ID of the user who created the ticket (Foreign Key to users table)
+    claimed BOOLEAN DEFAULT FALSE       -- New column to track if the ticket is claimed (default: unclaimed)
 );
+
 
 CREATE TABLE IF NOT EXISTS categories (
     id INT AUTO_INCREMENT PRIMARY KEY,

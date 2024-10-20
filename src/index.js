@@ -66,12 +66,19 @@ async function updateTicketStatus(id, status) {
 
 // Hämta en specifik ticket baserat på ID
 async function getTicketById(ticketId) {
-    const db = await connectDB();
-    let sql = `SELECT * FROM tickets WHERE id = ?`;
-    let res = await db.query(sql, [ticketId]);
+    const db = await mysql.createConnection(config);
+    const sql = `
+        SELECT 
+            id, problem, description, category, status, claimed, tid,
+            IF(claimed = FALSE, DATEDIFF(CURRENT_DATE, tid), NULL) AS days_since_created
+        FROM tickets
+        WHERE id = ?;
+    `;
+    const result = await db.query(sql, [ticketId]);
     await db.end();
-    return res[0];
+    return result[0]; // Return the ticket details with the days_since_created value
 }
+
 async function filterTickets(category, status) {
     const db = await mysql.createConnection(config);
 
@@ -131,16 +138,16 @@ async function getResolutionByTicketId(ticketId) {
     const db = await mysql.createConnection(config);
     const sql = `
         SELECT tp.*, u.username AS agent_name
-        FROM ticket_progress AS tp
+        FROM ticket_progress tp
         JOIN users u ON tp.agent_id = u.id
         WHERE tp.ticket_id = ?
         ORDER BY tp.created_at ASC;
     `;
     const rows = await db.query(sql, [ticketId]);
     await db.end();
-    console.log("ROWS: ",rows);
-    return rows; // This should return an array of progress steps with the agent name
+    return rows; // This now returns the agent's name in the result
 }
+
 
 
 

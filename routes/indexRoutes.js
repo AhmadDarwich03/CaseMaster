@@ -38,10 +38,27 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Route: Startsida (endast inloggade användare)
-router.get("/", authMiddleware, (req, res) => {
-    let data = {};
-    data.title = "Layout";
-    res.render("pages/layout.ejs", data);
+router.get('/', authMiddleware, async (req, res) => {
+    try {
+        const db = await mysql.createConnection(config);
+
+        // SQL query to fetch tickets unclaimed for more than 3 days
+        const sql = `
+            SELECT id, problem, description, category, tid, status, 
+                   DATEDIFF(CURRENT_DATE, tid) AS days_since_created
+            FROM tickets
+            WHERE claimed = FALSE
+            AND DATEDIFF(CURRENT_DATE, tid) >= 3
+        `;
+
+        const unclaimedTickets = await db.query(sql);
+        await db.end();
+
+        res.render('pages/layout.ejs', { unclaimedTickets });
+    } catch (error) {
+        console.error('Error fetching unclaimed tickets:', error);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 // Route: Create Ticket Page (endast inloggade användare)
@@ -74,60 +91,73 @@ router.post("/create", authMiddleware, upload.single('attachment'), async (req, 
     }
 });
 
-router.get("/tickets-list", authMiddleware, async (req, res) => {
+
+
+
+router.get('/tickets-list', authMiddleware, async (req, res) => {
     try {
         let data = {};
         data.title = "All Tickets";
-        data.userRole = req.session.userRole;
+        data.userRole = req.session.userRole; // Pass the user role for conditional actions
 
-        // Hämta filtreringsparametrar från GET-förfrågan och använd tom sträng som standard
-        const { category = "", status = "" } = req.query;
+        // Get category, status, and claimed filters from query params
+        const { category = "", status = "", claimed = "" } = req.query;
         data.category = category;
         data.status = status;
+        data.claimed = claimed;
 
-        // Hämta kategorierna från databasen för filtermenyn
+        // Fetch categories for the filter dropdown
         const categories = await index.viewCategories();
         data.categories = categories;
 
-        // SQL-fråga för att hämta tickets
-        let sql;
-        let queryParams;
+        // SQL query for fetching filtered tickets
+        let sql = `
+            SELECT *,
+                   IF(claimed = FALSE, DATEDIFF(CURRENT_DATE, tid), NULL) AS days_since_created
+            FROM tickets
+            WHERE 1=1
+        `;
+        let queryParams = [];
 
-        // Om användaren är admin eller agent, visa alla tickets
-        if (req.session.userRole === 'admin' || req.session.userRole === 'agent') {
-            sql = `SELECT * FROM tickets WHERE 1=1`; // Visa alla tickets för admin och agenter
-            queryParams = [];
-        } else {
-            // Visa endast tickets för inloggad användare om det inte är admin eller agent
-            sql = `SELECT * FROM tickets WHERE user_id = ?`;
-            queryParams = [req.session.userId];
+        // Filter tickets for user role
+        if (req.session.userRole !== 'admin' && req.session.userRole !== 'agent') {
+            sql += ` AND user_id = ?`; // Show only tickets that belong to the logged-in user
+            queryParams.push(req.session.userId);
         }
 
-        // Lägg till filtreringsvillkor beroende på om `category` eller `status` är ifyllda
+        // Apply category filter if set
         if (category && category !== "") {
             sql += ` AND category = ?`;
             queryParams.push(category);
         }
 
+        // Apply status filter if set
         if (status && status !== "") {
             sql += ` AND status = ?`;
             queryParams.push(status);
         }
 
-        // Hämta de filtrerade resultaten från databasen
+        // Apply claimed filter if set
+        if (claimed === "Yes") {
+            sql += ` AND claimed = TRUE`; // Only show claimed tickets
+        } else if (claimed === "No") {
+            sql += ` AND claimed = FALSE`; // Only show unclaimed tickets
+        }
+
+        // Fetch filtered tickets from the database
         const db = await mysql.createConnection(config);
         const filteredTickets = await db.query(sql, queryParams);
         await db.end();
 
-        // Skicka de filtrerade tickets och filtreringsparametrar till EJS-filen
-        data.filteredTickets = filteredTickets;
+        data.filteredTickets = filteredTickets; // Pass the filtered tickets to the view
 
-        res.render("pages/tickets-list.ejs", data);
+        res.render('pages/tickets-list.ejs', data); // Render the tickets-list page with data
     } catch (error) {
-        console.error("Error fetching tickets:", error);
-        res.status(500).send("Internal Server Error");
+        console.error('Error fetching tickets:', error);
+        res.status(500).send('Internal Server Error');
     }
 });
+
 
 
 
@@ -294,9 +324,17 @@ router.post('/ticket-details/:id/add-progress', authMiddleware, adminOrAgentMidd
             comment
         });
 
-        // Fetch ticket and user information to send the update email
+        // Fetch ticket information
         const ticket = await index.getTicketById(ticketId);
+        console.log('Ticket Data:', ticket); // Log ticket data to debug if necessary
+
+        // Fetch user information
         const user = await index.getUserById(ticket.user_id); // Get the user who owns the ticket
+
+        if (!user) {
+            console.error(`User not found for ticket ${ticketId}`);
+            return res.status(404).send('User not found');
+        }
 
         // Prepare the email content
         const updateMessage = `A new progress update has been added to your ticket by ${req.session.username}: <strong>${action}</strong>.<br>Comment: ${comment || 'No comment'}`;
@@ -310,6 +348,24 @@ router.post('/ticket-details/:id/add-progress', authMiddleware, adminOrAgentMidd
     }
 });
 
+
+router.post('/ticket/:id/claim', authMiddleware, async (req, res) => {
+    const ticketId = req.params.id;
+
+    try {
+        // Update the ticket's claimed status to TRUE
+        const db = await mysql.createConnection(config);
+        const sql = `UPDATE tickets SET claimed = TRUE WHERE id = ?`;
+        await db.query(sql, [ticketId]);
+        await db.end();
+
+        // Redirect back to the ticket details page after claiming the ticket
+        res.redirect(`/ticket-details/${ticketId}`);
+    } catch (error) {
+        console.error('Error claiming ticket:', error);
+        res.status(500).send('Error claiming ticket');
+    }
+});
 
 
 

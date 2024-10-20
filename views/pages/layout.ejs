@@ -6,16 +6,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticketing System</title>
-    <link rel="stylesheet" href="/css/styles.css"> 
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
-<main>
-    <h1 class="welcome-title">Welcome to CaseMaster!</h1>
-    <p class="welcome-text">Here you can create and manage your tickets easily.</p>
-    <div class="center-button">
-        <a href="/create">Create Ticket</a>
-    </div>
-</main>
+<body>
 
+    <main>
+        <h1 class="welcome-title">Welcome to CaseMaster!</h1>
+        <p class="welcome-text">Here you can create and manage your tickets easily.</p>
+
+        <!-- Only show the unclaimed tickets table for admin or agents -->
+        <% if (session.userRole === 'admin' || session.userRole === 'agent') { %>
+            <section>
+                <h1>Unclaimed Tickets for More Than 3 Days</h1>
+
+                <% if (unclaimedTickets.length > 0) { %>
+                    <table border="1">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Problem</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Timestamp</th>
+                                <th>Days Unclaimed</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% unclaimedTickets.forEach(ticket => { %>
+                                <tr>
+                                    <td><a href="/ticket-details/<%= ticket.id %>"><%= ticket.id %></a></td>
+                                    <td><%= ticket.problem %></td>
+                                    <td><%= ticket.description %></td>
+                                    <td><%= ticket.category %></td>
+                                    <td><%= new Date(ticket.tid).toLocaleString() %></td>
+                                    <td><%= ticket.days_since_created %> days</td>
+                                    <td><%= ticket.status %></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                <% } else { %>
+                    <p>No tickets have been unclaimed for more than 3 days.</p>
+                <% } %>
+            </section>
+        <% } %>
+
+    </main>
+
+    <%- include('./../partials/footer.ejs') %>
+
+</body>
 </html>
-
-<%- include('./../partials/footer.ejs') %>

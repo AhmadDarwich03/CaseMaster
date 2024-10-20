@@ -32,6 +32,14 @@
                 <option value="closed" <%= status === "closed" ? "selected" : "" %>>Closed</option>
             </select>
 
+            <label for="claimed"></label>
+            <select name="claimed" id="claimed">
+                <option value="" <%= !claimed ? "selected" : "" %>>All Highlights</option>
+                <option value="Yes" <%= claimed === "Yes" ? "selected" : "" %>>Yes</option>
+                <option value="No" <%= claimed === "No" ? "selected" : "" %>>No</option>
+            </select>
+            
+
             <button type="submit">Filter</button>
         </form>
 
@@ -45,6 +53,8 @@
                     <th>Timestamp</th>
                     <th>Status</th>
                     <th>Action</th>
+                    <th>Claimed</th>
+                    <th>Days Since Created</th> <!-- Add this column for Days Since Created -->
                 </tr>
             </thead>
             <tbody>
@@ -71,17 +81,24 @@
                                     <span>Closed</span>
                                 <% } %>
                             </td>
-                                                      
+                            <td><%= ticket.claimed ? 'Yes' : 'No' %></td>
+                            <td>
+                                <% if (!ticket.claimed) { %>
+                                    <%= ticket.days_since_created %> days <!-- Display the days since creation for unclaimed tickets -->
+                                <% } else { %>
+                                    N/A <!-- If the ticket is claimed, display N/A -->
+                                <% } %>
+                            </td>
                         </tr>
                     <% }) %>
                 <% } else { %>
                     <tr>
-                        <td colspan="7">No tickets found.</td>
+                        <td colspan="9">No tickets found.</td>
                     </tr>
                 <% } %>
             </tbody>
         </table>
-    </main>
+            </main>
 
     <%- include('./../partials/footer.ejs') %>
 </body>

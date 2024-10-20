@@ -3,9 +3,6 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 // Set up the email transporter
 
-console.log('Email User:', process.env.EMAIL_USER);
-console.log('Email Pass:', process.env.EMAIL_PASS);
-
 const transporter = nodemailer.createTransport({
     service: 'Gmail', // You can change this to your preferred email service (e.g., SendGrid, etc.)
     auth: {

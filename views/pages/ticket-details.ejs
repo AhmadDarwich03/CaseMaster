@@ -21,6 +21,12 @@
                 <li><strong>Category:</strong> <span><%= ticket.category %></span></li>
                 <li><strong>Timestamp:</strong> <span><%= new Date(ticket.tid).toLocaleString() %></span></li>
                 <li><strong>Status:</strong> <span><%= ticket.status %></span></li>
+                <li><strong>Claimed:</strong> <span><%= ticket.claimed ? 'Yes' : 'No' %></span></li>
+
+                <!-- Display Days Since Created if the ticket is not claimed -->
+                <% if (!ticket.claimed) { %>
+                    <li><strong>Created:</strong> <%= ticket.days_since_created %> days</li>
+                <% } %>
 
                 <!-- Display uploaded file if exists -->
                 <% if (ticket.imagePath) { %>
@@ -38,12 +44,19 @@
                 <% } %>
             </ul>
             
+            <!-- Claim Ticket Button if not claimed -->
+            <% if (!ticket.claimed) { %>
+                <form action="/ticket/<%= ticket.id %>/claim" method="POST">
+                    <button type="submit">Claim Ticket</button>
+                </form>
+            <% } %>
+            
             <h2>Resolution Progress</h2>
             <% if (typeof progress !== 'undefined' && progress.length > 0) { %>
                 <% progress.forEach(function(step) { %>
                     <div class="progress-step">
                         <p><strong>Date:</strong> <%= new Date(step.created_at).toLocaleString() %></p>
-                        <p><strong>Agent:</strong> <%= step.agent_id %></p>
+                        <p><strong>Agent:</strong> <%= step.agent_name %></p> <!-- Use agent_name instead of agent_id -->
                         <p><strong>Action:</strong> <%= step.action %></p>
                         <% if (step.comment) { %>
                             <p><strong>Comment:</strong> <%= step.comment %></p>
@@ -54,12 +67,6 @@
             <% } else { %>
                 <p>No progress updates available.</p>
             <% } %>
-            
-            
-            
-            
-            
-            
             
             <% if (session.userRole === 'admin' || session.userRole === 'agent') { %>
                 <h2>Add Progress Update</h2>
@@ -73,7 +80,6 @@
                     <button type="submit">Add Progress</button>
                 </form>                
             <% } %>
-            
             
             <a href="/tickets-list" class="btn-back">Back to All Tickets</a>
         </div>
