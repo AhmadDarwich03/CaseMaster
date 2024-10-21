@@ -256,26 +256,35 @@ router.post("/register", async (req, res) => {
 });
 
 
-
 router.post('/ticket/close/:id', authMiddleware, async (req, res) => {
     const ticketId = req.params.id;
 
     try {
-        // Fetch the ticket and user information
-        const ticket = await index.getTicketById(ticketId); // Assuming this fetches the ticket
-        const user = await index.getUserById(ticket.user_id); // Assuming this fetches the user by ID
+        // Fetch the ticket from the database
+        const ticket = await index.getTicketById(ticketId);
+        console.log('Ticket Data:', ticket); // Check if ticket is valid and contains user_id
 
-        // Check if the user closing the ticket is the owner or an admin/agent
-        if (ticket.user_id !== req.session.userId && req.session.userRole !== 'admin' && req.session.userRole !== 'agent') {
-            return res.status(403).send('Access denied');
+        // Check if the ticket exists and has a valid user_id
+        if (!ticket || !ticket.user_id) {
+            console.log('Ticket or user_id not found');
+            return res.status(404).send('Ticket or associated user not found');
         }
 
-        // Update the ticket status to 'Closed'
+        // Fetch the user who created the ticket using the user_id
+        const user = await index.getUserById(ticket.user_id); // Use ticket.user_id
+        console.log('User Data:', user); // Check if user is valid
+
+        if (!user) {
+            console.log('User not found');
+            return res.status(404).send('User not found');
+        }
+
+        // Update the ticket's status to 'Closed'
         await index.updateTicketStatus(ticketId, 'Closed');
 
-        // Send email notification to the user about ticket closure
-        const updateMessage = `Your ticket has been closed by ${req.session.username}.`;
-        await sendTicketUpdateEmail(user.email, ticketId, updateMessage); // Send the email
+        // Send an email notification (assuming sendTicketUpdateEmail is defined)
+        const message = `Your ticket (ID: ${ticket.id}) has been closed.`;
+        await sendTicketUpdateEmail(user.email, ticketId, message); // Send email to the user
 
         res.redirect('/tickets-list');
     } catch (err) {
@@ -283,6 +292,8 @@ router.post('/ticket/close/:id', authMiddleware, async (req, res) => {
         res.status(500).send('Error closing ticket');
     }
 });
+
+
 
 router.get("/ticket-details/:id", authMiddleware, async (req, res) => {
     const ticketId = req.params.id;
@@ -367,6 +378,54 @@ router.post('/ticket/:id/claim', authMiddleware, async (req, res) => {
     }
 });
 
+
+router.get('/users', authMiddleware, async (req, res) => {
+    try {
+        const db = await mysql.createConnection(config);
+        const users = await db.query('SELECT * FROM users WHERE role != "admin"'); // Exclude admins
+        await db.end();
+
+        res.render('pages/users', { users });
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+router.post('/edit-role/:id', authMiddleware, async (req, res) => {
+    const userId = req.params.id;
+    const newRole = req.body.role;
+
+    try {
+        const db = await mysql.createConnection(config);
+        const sql = `UPDATE users SET role = ? WHERE id = ?`;
+        await db.query(sql, [newRole, userId]);
+        await db.end();
+
+        res.redirect('/users'); // Redirect back to the users list after editing the role
+    } catch (error) {
+        console.error('Error updating user role:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+router.post('/delete-user/:id', authMiddleware, async (req, res) => {
+    const userId = req.params.id;
+
+    try {
+        const db = await mysql.createConnection(config);
+        const sql = `DELETE FROM users WHERE id = ? AND role != 'admin'`; // Ensure that admin users cannot be deleted
+        await db.query(sql, [userId]);
+        await db.end();
+
+        res.redirect('/users'); // Redirect back to the users list after deletion
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 
 

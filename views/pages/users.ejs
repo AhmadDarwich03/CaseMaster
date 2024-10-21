@@ -1,0 +1,54 @@
+<%- include('./../partials/header.ejs') %>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Users</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <header>
+        <h1>All Users</h1>
+    </header>
+
+    <main>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% users.forEach(user => { %>
+                    <% if (user.role !== 'admin') { %> <!-- Hide admins from the list -->
+                        <tr>
+                            <td><a href="/user-details/<%= user.id %>"><%= user.id %></a></td>
+                            <td><%= user.username %></td>
+                            <td>
+                                <!-- Dropdown for editing role -->
+                                <form action="/edit-role/<%= user.id %>" method="POST">
+                                    <select name="role" onchange="this.form.submit()">
+                                        <option value="user" <%= user.role === 'user' ? 'selected' : '' %>>User</option>
+                                        <option value="agent" <%= user.role === 'agent' ? 'selected' : '' %>>Agent</option>
+                                    </select>
+                                </form>
+                            </td>
+                            <td>
+                                <!-- Button for deleting the user -->
+                                <form action="/delete-user/<%= user.id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                    <button type="submit" class="btn-delete">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% } %>
+                <% }) %>
+            </tbody>
+        </table>
+    </main>
+
+    <%- include('./../partials/footer.ejs') %>
+</body>

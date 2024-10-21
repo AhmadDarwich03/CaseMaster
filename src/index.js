@@ -3,6 +3,7 @@
 const config = require("../db.json");
 const mysql = require("promise-mysql");
 
+
 // Funktion för att skapa en anslutning till databasen
 async function connectDB() {
     return await mysql.createConnection(config);
@@ -19,6 +20,7 @@ async function getUserByUsernameOrEmail(identifier) {
     await db.end();
     return res[0];  // Returnera första träffen
 }
+
 
 
 // Lägg till en användare i databasen
@@ -64,20 +66,14 @@ async function updateTicketStatus(id, status) {
     return res;
 }
 
-// Hämta en specifik ticket baserat på ID
 async function getTicketById(ticketId) {
     const db = await mysql.createConnection(config);
-    const sql = `
-        SELECT 
-            id, problem, description, category, status, claimed, tid,
-            IF(claimed = FALSE, DATEDIFF(CURRENT_DATE, tid), NULL) AS days_since_created
-        FROM tickets
-        WHERE id = ?;
-    `;
+    const sql = `SELECT * FROM tickets WHERE id = ?`; // This query should fetch the user_id along with other ticket data
     const result = await db.query(sql, [ticketId]);
     await db.end();
-    return result[0]; // Return the ticket details with the days_since_created value
+    return result[0]; // Return the first result (ticket)
 }
+
 
 async function filterTickets(category, status) {
     const db = await mysql.createConnection(config);
@@ -149,9 +145,6 @@ async function getResolutionByTicketId(ticketId) {
 }
 
 
-
-
-
 async function addProgress (progressData) {
     const db = await mysql.createConnection(config);
     const sql = 'INSERT INTO ticket_progress (ticket_id, agent_id, action, comment) VALUES (?, ?, ?, ?)';
@@ -169,14 +162,15 @@ async function fetchTicketDetailsById(ticketId) {
     return result[0];
 }
 
-// Fetch user information by user ID
 async function getUserById(userId) {
-    const db = await connectDB(); // Assuming you have this function to connect to the database
+    const db = await mysql.createConnection(config);
     const sql = `SELECT * FROM users WHERE id = ?`;
     const result = await db.query(sql, [userId]);
     await db.end();
-    return result[0]; // Return the user object
+    return result[0]; // Return the first result (user)
 }
+
+
 
 
 
