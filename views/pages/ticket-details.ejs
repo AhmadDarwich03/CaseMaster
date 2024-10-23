@@ -18,36 +18,55 @@
                         <%= ticket.description %>
                     </div>
                 </li>
-                <li><strong>Category:</strong> <span><%= ticket.category %></span></li>
+                <li><strong>Category:</strong>
+                    <form action="/ticket/<%= ticket.id %>/edit-category" method="POST">
+                        <select name="category" required>
+                            <% if (categories && categories.length > 0) { %> <!-- Check if categories exist -->
+                                <% categories.forEach(function(category) { %>
+                                    <option value="<%= category.name %>" <%= category.name.trim() === ticket.category.trim() ? 'selected' : '' %>>
+                                        <%= category.name %> <!-- Display category name -->
+                                    </option>
+                                <% }); %>
+                            <% } else { %>
+                                <option disabled>No categories available</option>
+                            <% } %>
+                        </select>
+                        <button type="submit">Update Category</button>
+                    </form>
+                    
                 <li><strong>Timestamp:</strong> <span><%= new Date(ticket.tid).toLocaleString() %></span></li>
                 <li><strong>Status:</strong> <span><%= ticket.status %></span></li>
                 <li><strong>Claimed:</strong> <span><%= ticket.claimed ? 'Yes' : 'No' %></span></li>
 
-                <!-- Display Days Since Created if the ticket is not claimed -->
                 <% if (!ticket.claimed) { %>
                     <li><strong>Created:</strong> <%= ticket.days_since_created %> days</li>
                 <% } %>
 
-                <!-- Display uploaded file if exists -->
                 <% if (ticket.imagePath) { %>
                     <li><strong>Attachment:</strong>
                         <div class="attachment-section">
                             <% if (ticket.imagePath.match(/\.(jpg|jpeg|png)$/)) { %>
-                                <!-- Display as image if it's a picture -->
                                 <img src="/<%= ticket.imagePath %>" alt="Ticket Image" class="ticket-image">
                             <% } else { %>
-                                <!-- Provide download link for non-image files -->
                                 <a href="/<%= ticket.imagePath %>" download class="btn-download">Download File</a>
                             <% } %>
                         </div>
                     </li>
                 <% } %>
             </ul>
-            
-            <!-- Claim Ticket Button if not claimed -->
-            <% if (!ticket.claimed) { %>
-                <form action="/ticket/<%= ticket.id %>/claim" method="POST">
-                    <button type="submit">Claim Ticket</button>
+
+            <% if (session.userRole === 'admin' || session.userRole === 'agent') { %>
+                <% if (!ticket.claimed) { %>
+                    <form action="/ticket/<%= ticket.id %>/claim" method="POST">
+                        <button type="submit">Claim Ticket</button>
+                    </form>
+                <% } %>
+            <% } %>
+
+            <!-- Delete Ticket Button -->
+            <% if (session.userRole === 'admin' || session.userRole === 'agent') { %>
+                <form action="/ticket/<%= ticket.id %>/delete" method="POST" onsubmit="return confirm('Are you sure you want to delete this ticket?');">
+                    <button type="submit" class="btn-delete">Delete Ticket</button>
                 </form>
             <% } %>
             
@@ -56,7 +75,7 @@
                 <% progress.forEach(function(step) { %>
                     <div class="progress-step">
                         <p><strong>Date:</strong> <%= new Date(step.created_at).toLocaleString() %></p>
-                        <p><strong>Agent:</strong> <%= step.agent_name %></p> <!-- Use agent_name instead of agent_id -->
+                        <p><strong>Agent:</strong> <%= step.agent_name %></p>
                         <p><strong>Action:</strong> <%= step.action %></p>
                         <% if (step.comment) { %>
                             <p><strong>Comment:</strong> <%= step.comment %></p>
@@ -80,12 +99,12 @@
                     <button type="submit">Add Progress</button>
                 </form>                
             <% } %>
-            
+
             <a href="/tickets-list" class="btn-back">Back to All Tickets</a>
         </div>
     </section>
 
-    <a href="/chat" class="button">Here you can ask for forther quetions</a>
+    <a href="/chat" class="button">Here you can ask further questions</a>
     
     <%- include('./../partials/footer.ejs') %>
 </body>

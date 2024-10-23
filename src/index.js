@@ -170,8 +170,45 @@ async function getUserById(userId) {
     return result[0]; // Return the first result (user)
 }
 
+async function deleteTicketById(ticketId) {
+    const db = await mysql.createConnection(config);
+    try {
+        // First, delete all related ticket progress records
+        const deleteProgressSql = 'DELETE FROM ticket_progress WHERE ticket_id = ?';
+        await db.query(deleteProgressSql, [ticketId]);
 
+        // Then, delete the ticket itself
+        const deleteTicketSql = 'DELETE FROM tickets WHERE id = ?';
+        await db.query(deleteTicketSql, [ticketId]);
 
+        console.log(`Ticket with ID ${ticketId} and its related progress records have been deleted`);
+    } catch (error) {
+        throw error;
+    } finally {
+        await db.end();
+    }
+}
+
+async function updateTicketCategory(ticketId, newCategory) {
+    const db = await mysql.createConnection(config);
+    try {
+        const sql = 'UPDATE tickets SET category = ? WHERE id = ?';
+        await db.query(sql, [newCategory, ticketId]);
+        console.log(`Updated category for ticket ID ${ticketId} to ${newCategory}`);
+    } catch (error) {
+        throw error;
+    } finally {
+        await db.end();
+    }
+}
+
+async function getAllCategories() {
+    const db = await mysql.createConnection(config);
+    const sql = `SELECT * FROM categories;`; // Fetch all categories
+    const [rows] = await db.query(sql);
+    await db.end();
+    return rows; // Return the rows, which should be an array of categories
+}
 
 
 // Exportera alla funktioner så att de kan användas i routes
@@ -191,5 +228,8 @@ module.exports = {
     getResolutionByTicketId,
     addProgress,
     fetchTicketDetailsById,
-    getUserById
+    getUserById,
+    deleteTicketById,
+    updateTicketCategory,
+    getAllCategories
 };

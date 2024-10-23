@@ -5,11 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        /* Inline styles for white text */
+        label {
+            color: white; /* Make labels white */
+        }
+        input[type="text"], 
+        input[type="email"], 
+        input[type="password"], 
+        select {
+            color: white; /* Make input text white */
+            background-color: #333; /* Optional: Darker background for better contrast */
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        select option {
+            color: black; /* Optional: Make dropdown options black */
+            background-color: #fff; /* Background for dropdown options */
+        }
+    </style>
 </head>
 
 <body>
     <div class="container">
-        <h2>Register New User</h2>
         <form action="/register" method="POST">
             <div class="input-box">
                 <label for="username">Username</label>
@@ -36,7 +55,6 @@
                 <p class="error-message"><%= message %></p>
             <% } %>            
         </form>
-        <p>Already have an account? <a href="/login">Login here</a>.</p>
     </div>
 </body>
 

@@ -5,7 +5,9 @@ body {
     background-position: center;
     background-repeat: no-repeat;
 }
-
+.input-box1{
+    color: white;
+}
 
 /* Header */
 header {
@@ -106,7 +108,7 @@ form {
 label {
     margin: 20px 0 10px;
     font-weight: bold;
-    color: #f9f3f3;
+    color: black;
 }
 
 input[type="text"], input[type="password"], textarea, select {
@@ -592,4 +594,17 @@ main {
 
 .loginh2{
     color:white;
+}
+
+.btn-delete {
+    background-color: #e74c3c;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.btn-delete:hover {
+    background-color: #c0392b;
 }

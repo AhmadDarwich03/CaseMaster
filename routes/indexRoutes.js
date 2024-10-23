@@ -293,22 +293,21 @@ router.post('/ticket/close/:id', authMiddleware, async (req, res) => {
     }
 });
 
-
-
 router.get("/ticket-details/:id", authMiddleware, async (req, res) => {
     const ticketId = req.params.id;
-    console.log(ticketId);
     try {
-        // Fetch ticket details
         let data = {};
         data.title = "Ticket Details";
-        data.ticket = await index.getTicketById(ticketId); // Assuming this fetches ticket details
+        data.ticket = await index.getTicketById(ticketId); // Fetch ticket details
         data.userRole = req.session.userRole;
 
-        const progressData = await index.getResolutionByTicketId(ticketId);
-        data.progress = progressData;
+        // Fetch categories
+        data.categories = await index.viewCategories(); // Ensure categories are fetched correctly
+
+        // Fetch ticket progress (if available)
+        data.progress = await index.getResolutionByTicketId(ticketId);
         
-        console.log("PROGRESSS", progressData);
+        console.log("Categories:", data.categories); // Log categories to ensure they are being fetched
 
         // Render the ticket details page
         res.render("pages/ticket-details.ejs", data);
@@ -317,8 +316,6 @@ router.get("/ticket-details/:id", authMiddleware, async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 });
-
-
 
 
 router.post('/ticket-details/:id/add-progress', authMiddleware, adminOrAgentMiddleware, async (req, res) => {
@@ -448,5 +445,37 @@ router.post("/signup", async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 });
+
+// Delete a ticket route
+router.post('/ticket/:id/delete', authMiddleware, adminOrAgentMiddleware, async (req, res) => {
+    const ticketId = req.params.id;
+    
+    try {
+        // Call a function to delete the ticket from the database
+        await index.deleteTicketById(ticketId);
+        console.log(`Ticket with ID ${ticketId} deleted successfully`);
+        
+        // Redirect to the tickets list or home page after deletion
+        res.redirect('/tickets-list');
+    } catch (error) {
+        console.error('Error deleting ticket:', error);
+        res.status(500).send('Error deleting ticket');
+    }
+});
+
+router.post('/ticket/:id/edit-category', authMiddleware, async (req, res) => {
+    const ticketId = req.params.id;
+    const newCategory = req.body.category; // The selected category from the dropdown
+
+    try {
+        await index.updateTicketCategory(ticketId, newCategory);  // Update ticket category in the database
+        res.redirect(`/ticket-details/${ticketId}`);
+    } catch (error) {
+        console.error('Error updating category:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
 
 module.exports = router;
