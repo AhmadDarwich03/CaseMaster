@@ -428,6 +428,25 @@ router.post('/delete-user/:id', authMiddleware, async (req, res) => {
 });
 
 
+router.get("/signup", (req, res) => {
+    res.render("pages/signup.ejs", { message: "" });
+});
 
+router.post("/signup", async (req, res) => {
+    const { username, email, password } = req.body;  // Make sure role is included
+
+    try {
+        // Hash the password before saving to the database
+        const hashedPassword = await bcrypt.hash(password, 10);
+            console.log("dasjshfhjshfhjhjfahfwahufygegdbbbbbbtyesyesyesyes");
+        // Add the user to the database
+        await index.addUser(username, email, hashedPassword, "user");
+
+        res.redirect("/");  // Redirect to login after successful registration
+    } catch (error) {
+        console.error("Error registering new user:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
 
 module.exports = router;

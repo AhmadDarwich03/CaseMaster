@@ -1,279 +1,239 @@
-/* General body styles for all pages */
 body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-image: url('/images/bakgrund.webp'); /* Set the background image */
-    background-color: #121212; /* Mörkare fallback-färg */
+    background-image: url('/images/bakgrund.webp'); /* Background image */
+    background-color: #121212; /* Dark fallback */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    color: #000000; /* Ändra textfärgen till vit för kontrast */
 }
 
-/* Header styles */
+
+/* Header */
 header {
-    background-color: #2C3E50; /* Mörkblå nyans */
-    color: #ecf0f1; /* Ljus textfärg */
-    padding: 20px;
+    background-color: #2C3E50; /* Darker blue */
+    color: #ecf0f1;
+    padding: 30px; /* Increased padding */
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Slightly stronger shadow */
 }
 
 header h1 {
     margin: 0;
-    font-size: 2.5em;
+    font-size: 3em; /* Larger heading */
+    letter-spacing: 1px;
 }
 
 header p {
-    font-size: 1.2em;
-    color: #bdc3c7; /* Ljusare grå färg för undertexter */
+    font-size: 1.3em; /* Increased size */
+    color: #bdc3c7;
 }
 
+/* Navigation */
 nav {
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 nav a {
     color: #ecf0f1;
     text-decoration: none;
     font-weight: bold;
-    margin: 0 15px;
-    padding: 10px 15px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease-in-out;
+    margin: 0 20px;
+    padding: 12px 20px;
+    border-radius: 50px; /* Rounded buttons */
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 nav a:hover {
-    background-color: #34495e; /* Mörkare nyans vid hover */
+    background-color: #3498db;
+    transform: scale(1.05); /* Interactive scaling */
 }
 
-/* Main section - Flexbox styles for vertical and horizontal centering */
+/* Main section - Flexbox */
 main {
     display: flex;
-    justify-content: center; /* Horisontellt centrera */
-    align-items: center; /* Vertikalt centrera */
-    height: calc(100vh - 100px); /* Justera höjden så att den inte överlappar header och footer */
-    flex-direction: column; /* Lägg elementen i en kolumn */
-    text-align: center; /* Centrera textinnehållet */
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 140px); /* Adjusted for header and footer */
+    flex-direction: column;
+    text-align: center;
 }
 
-/* Styling for the welcome message */
+/* Welcome message */
 h1.welcome-title {
-    font-size: 4em;
+    font-size: 4.5em; /* Larger title */
     font-weight: bold;
-    color: #ecf0f1;
+    color: #f0f0f0;
 }
 p.welcome-subtitle {
-    font-size: 1.2em;
-    color: #bdc3c7; /* Ljusare text för beskrivningar */
-    margin-bottom: 40px;
+    font-size: 1.4em;
+    color: #bdc3c7;
+    margin-bottom: 50px;
 }
 
-/* Styling for the Create Ticket button */
+/* Button */
 .center-button a {
-    background-color: #3498db; /* Klarblå nyans */
+    background-color: #3498db;
     color: white;
-    padding: 15px 30px;
-    text-decoration: none;
-    font-size: 18px;
-    border-radius: 5px;
+    padding: 18px 40px;
+    font-size: 20px; /* Larger font */
+    border-radius: 50px; /* Rounded corners */
     font-weight: bold;
-    transition: background-color 0.3s;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, transform 0.3s ease-in-out;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .center-button a:hover {
-    background-color: #2980b9; /* Mörkare blå vid hover */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-}
-nav a:hover {
-    background-color: #0056b3;
+    background-color: #2980b9;
+    transform: scale(1.05); /* Hover effect */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
 }
 
-/* Styling for main sections */
+/* Section styling */
 section {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 30px;
-    background: rgba(255, 255, 255, 0.85); /* Add semi-transparent background */
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    max-width: 900px; /* Increased width */
+    margin: 50px auto;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.9); /* Lighter background */
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Styling for forms */
+/* Form styling */
 form {
     display: flex;
     flex-direction: column;
 }
 
 label {
-    margin: 15px 0 5px;
+    margin: 20px 0 10px;
     font-weight: bold;
-    color: #333;
+    color: #f9f3f3;
 }
 
 input[type="text"], input[type="password"], textarea, select {
-    padding: 12px;
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 15px;
+    padding: 15px;
+    font-size: 18px; /* Larger font for inputs */
+    border: 1px solid #ccc;
+    border-radius: 8px; /* Rounded corners */
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9; /* Light background for readability */
+    color: #333; /* Darker text */
 }
 
-/* Button styles */
+
+/* Button */
 button {
     background-color: #28a745;
     color: white;
     border: none;
-    padding: 12px;
-    font-size: 16px;
-    border-radius: 5px;
+    padding: 15px 20px;
+    font-size: 18px;
+    border-radius: 8px; /* Rounded corners */
     cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Slight shadow for depth */
 }
 
 button:hover {
-    background-color: #e70c0c;
+    background-color: #218838;
+    transform: scale(1.05); /* Slight hover effect */
 }
 
-.center-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* Full-height */
-}
 
-.center-button a {
-    background-color: #007bff;
-    color: white;
-    padding: 15px 30px;
-    text-decoration: none;
-    font-size: 18px;
-    border-radius: 5px;
-    font-weight: bold;
-    transition: background-color 0.3s;
-}
-
-.center-button a:hover {
-    background-color: #0056b3;
-}
-
-/* Table styles */
+/* Table styling */
 table {
     width: 100%;
-    margin: 30px 0;
+    margin: 40px 0;
     border-collapse: collapse;
     background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
 th, td {
     border: 1px solid #ddd;
-    padding: 16px;
+    padding: 20px;
     text-align: center;
+    font-size: 16px;
+    color: #333;
+    vertical-align: middle; /* Centers the text vertically */
 }
 
 th {
-    background-color: #007bff;
+    background-color: #3498db; /* Blue header */
     color: white;
     font-weight: bold;
+    text-transform: uppercase;
+    font-size: 18px;
 }
 
 td {
     color: #333;
 }
 
+td a {
+    color: #6c63ff;
+    text-decoration: none;
+}
+
+td a:hover {
+    text-decoration: underline;
+}
+
 tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: #f9f9f9; /* Light gray for even rows */
 }
 
 tr:hover {
-    background-color: #e9e9e9;
+    background-color: #ecf0f1; /* Slightly darker hover */
 }
 
-/* Container styles for login and create pages */
-.container {
-    width: 400px;
-    margin: 100px auto;
-    padding: 30px;
-    background: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
-}
-
-/* Styling for error messages */
-.error-message {
-    color: red;
-    text-align: center;
-    margin-top: -10px;
-    margin-bottom: 15px;
-}
-
-/* Footer styles */
-/* Footer-styling */
-footer {
-    background-color: #333333;
-    color: #ffffff;
-    padding: 20px;
-    text-align: center;
+/* Table container for shadow effect */
+table {
     width: 100%;
-    position: relative; /* Se till att positioneringen inte överlappar */
-    bottom: 0;
-    margin-top: auto; /* För att trycka ner footern längst ner */
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Gör innehållet i footern lite mindre */
-.footer-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 10px;
+td, th {
+    padding: 15px;
 }
 
-.footer-container div {
-    margin: 10px;
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    table {
+        font-size: 14px; /* Slightly smaller font for smaller screens */
+    }
+
+    th, td {
+        padding: 12px;
+    }
 }
 
-.footer-about h3, .footer-links h4, .footer-contact h4 {
-    font-size: 16px;
-    margin-bottom: 6px;
-}
-
-.footer-about p {
-    font-size: 12px;
-    line-height: 1.4;
-}
-
-.footer-links ul {
-    list-style: none;
-    padding: 0;
-}
-
-.footer-links ul li {
-    margin-bottom: 6px;
-}
-
-.footer-links ul li a {
+/* Footer */
+footer {
+    background-color: #333;
     color: #fff;
-    text-decoration: none;
-    transition: color 0.3s ease;
+    padding: 25px;
+    text-align: center;
+    position: relative;
+    margin-top: auto;
 }
 
-.footer-links ul li a:hover {
-    color: #f9d342;
-}
-
-.footer-contact p {
-    margin: 3px 0;
-    font-size: 12px;
+.footer-container {
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
 .footer-bottom {
     margin-top: 10px;
-    font-size: 12px;
+    font-size: 13px;
     border-top: 1px solid #444;
-    padding: 5px 0;
+    padding: 10px 0;
 }
+
 
 textarea {
     resize: vertical; /* Tillåter användaren att dra och ändra storleken vertikalt */
@@ -589,4 +549,47 @@ main {
 
 .progress-step strong {
     color: #333;
+}
+
+.chat-container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+.chat-box {
+    height: 300px;
+    overflow-y: auto;
+    border: 1px solid #000;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.chat-input {
+    display: flex;
+    margin-top: 10px;
+}
+
+#message-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+#send-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#send-button:hover {
+    background-color: #0056b3;
+}
+
+.loginh2{
+    color:white;
 }

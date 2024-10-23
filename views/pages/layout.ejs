@@ -11,8 +11,6 @@
 <body>
 
     <main>
-        <h1 class="welcome-title">Welcome to CaseMaster!</h1>
-        <p class="welcome-text">Here you can create and manage your tickets easily.</p>
 
         <!-- Only show the unclaimed tickets table for admin or agents -->
         <% if (session.userRole === 'admin' || session.userRole === 'agent') { %>
