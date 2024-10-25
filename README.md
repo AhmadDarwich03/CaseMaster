@@ -56,17 +56,37 @@ To get the project up and running, follow these steps:
     ```
 
 
-3. Create a `.env` file in the root directory and configure the following:
+3. Create a `db.json` file in the root directory and configure the following:
     ```
     DB_HOST=localhost
     DB_USER=root
     DB_PASS=yourpassword of your choice
     DB_NAME=ticketing
-    EMAIL_USER=your-email@example.com
-    EMAIL_PASS=your-email-password
     ```
 
-4. Set up the database (see below).
+4. Create a `.env` file there you should add the google account.
+
+    ```
+    EMAIL_USER=your-email@example.com
+    EMAIL_PASS=your-app-password
+
+    if you dont know how to genrate a app password, im gonna show how to it.
+
+    1. Enable 2-Step Verification on Your Google Account
+
+    Go to Google Account Security.
+    Scroll down to "Signing in to Google".
+    Enable 2-Step Verification if it’s not already enabled. This is required for creating App Passwords.
+
+    2. Generate an App Password
+
+    After enabling 2-Step Verification, go back to the Security section.
+    Under "Signing in to Google", select App Passwords.
+    Choose the app and device you want to create an app password for. For example:
+    Select App: "Mail"
+    Select Device: Choose your device 
+    Click Generate. Google will display a 16-character password; this is your App Password. 
+    ```
 
 5. Start the server:
     ```bash
@@ -107,19 +127,18 @@ Navigate to `http://localhost:1331` to access the system.
 
 ## Database Setup
 
-1. Create a new MySQL or MariaDB database for the project:
-    ```sql
-    CREATE DATABASE ticketing;
+1. via terminal, enter the sql folder:
+    ```bash
+    cd sql
     ```
 
 2. Import the provided SQL files to set up the database structure:
     ```bash
-    mysql -u root -p ticketing < sql/setup.sql
+    mariadb < reset.sql
     ```
-
-3. (Optional) Insert test data using the `insert.sql` file:
+3. go back to project root:
     ```bash
-    mysql -u root -p ticketing < sql/insert.sql
+    cd ..
     ```
 
 ## Routes
