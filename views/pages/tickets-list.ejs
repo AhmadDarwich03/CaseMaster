@@ -15,7 +15,7 @@
         </nav>
     </header>
     <main>
-        <!-- Filter-formulär för category och status -->
+        <!-- Filter-form for category, status, and claimed -->
         <form action="/tickets-list" method="GET" class="filter-form">
             <label for="category"></label>
             <select name="category" id="category">
@@ -38,7 +38,6 @@
                 <option value="Yes" <%= claimed === "Yes" ? "selected" : "" %>>Yes</option>
                 <option value="No" <%= claimed === "No" ? "selected" : "" %>>No</option>
             </select>
-            
 
             <button type="submit">Filter</button>
         </form>
@@ -55,6 +54,7 @@
                     <th>Action</th>
                     <th>Claimed</th>
                     <th>Days Since Created</th> <!-- Add this column for Days Since Created -->
+                    <th>View Ticket</th> <!-- New column for viewing tickets -->
                 </tr>
             </thead>
             <tbody>
@@ -69,8 +69,8 @@
                             <td><%= ticket.status %></td>
                             <td>
                                 <% if (ticket.status === 'open') { %>
-                                    <!-- Administratörer, agenter och ägare kan stänga tickets -->
-                                    <% if (userRole === 'admin' || userRole === 'agent') { %>
+                                    <!-- Administrators, agents, and the ticket owner can close tickets -->
+                                    <% if (userRole === 'admin' || userRole === 'agent' || userRole === "user") { %>
                                         <form action="/ticket/close/<%= ticket.id %>" method="POST" style="display:inline;">
                                             <button type="submit">Close Ticket</button>
                                         </form>
@@ -89,16 +89,22 @@
                                     N/A <!-- If the ticket is claimed, display N/A -->
                                 <% } %>
                             </td>
+                            <td>
+                                <!-- View Ticket button in a new column -->
+                                <a href="/ticket-details/<%= ticket.id %>">
+                                    <button type="button">View Ticket</button>
+                                </a>
+                            </td>
                         </tr>
                     <% }) %>
                 <% } else { %>
                     <tr>
-                        <td colspan="9">No tickets found.</td>
+                        <td colspan="10">No tickets found.</td>
                     </tr>
                 <% } %>
             </tbody>
         </table>
-            </main>
+    </main>
 
     <%- include('./../partials/footer.ejs') %>
 </body>

@@ -19,25 +19,29 @@
                     </div>
                 </li>
                 <li><strong>Category:</strong>
-                    <form action="/ticket/<%= ticket.id %>/edit-category" method="POST">
-                        <select name="category" required>
-                            <% if (categories && categories.length > 0) { %> <!-- Check if categories exist -->
-                                <% categories.forEach(function(category) { %>
-                                    <option value="<%= category.name %>" <%= category.name.trim() === ticket.category.trim() ? 'selected' : '' %>>
-                                        <%= category.name %> <!-- Display category name -->
-                                    </option>
-                                <% }); %>
-                            <% } else { %>
-                                <option disabled>No categories available</option>
-                            <% } %>
-                        </select>
-                        <button type="submit">Update Category</button>
-                    </form>
-                    
+                    <% if (session.userRole === 'admin' || session.userRole === 'agent') { %>
+                        <form action="/ticket/<%= ticket.id %>/edit-category" method="POST">
+                            <select name="category" required>
+                                <% if (categories && categories.length > 0) { %>
+                                    <% categories.forEach(function(category) { %>
+                                        <option value="<%= category.name.trim() %>" <%= category.name.trim() === ticket.category.trim() ? 'selected' : '' %>>
+                                            <%= category.name.trim() %> <!-- Display category name -->
+                                        </option>
+                                    <% }); %>
+                                <% } else { %>
+                                    <option disabled>No categories available</option>
+                                <% } %>
+                            </select>
+                            <button type="submit">Update Category</button>
+                        </form>
+                    <% } else { %>
+                        <span><%= ticket.category %></span> <!-- Display the category without editing options for non-admins/agents -->
+                    <% } %>
+                </li>                
                 <li><strong>Timestamp:</strong> <span><%= new Date(ticket.tid).toLocaleString() %></span></li>
                 <li><strong>Status:</strong> <span><%= ticket.status %></span></li>
                 <li><strong>Claimed:</strong> <span><%= ticket.claimed ? 'Yes' : 'No' %></span></li>
-
+ 
                 <% if (!ticket.claimed) { %>
                     <li><strong>Created:</strong> <%= ticket.days_since_created %> days</li>
                 <% } %>

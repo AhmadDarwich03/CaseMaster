@@ -6,10 +6,35 @@
     <title>Login</title>
     <link rel="stylesheet" href="/css/styles.css">
     <style>
-        /* Inline styles for white text */
+        /* Center the form properly */
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #121212; /* Dark background */
+        }
+
+        .container {
+            max-width: 400px;
+            background-color: rgba(0, 0, 0, 0.8); /* Dark background for the form */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Add shadow */
+            width: 100%;
+        }
+
+        h2.loginh2 {
+            color: white; /* Make the header white */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
         label {
             color: white; /* Make labels white */
         }
+
         input[type="text"], 
         input[type="password"] {
             color: white; /* Make input text white */
@@ -17,20 +42,10 @@
             border: 1px solid #ccc;
             padding: 10px;
             border-radius: 5px;
+            width: 100%; /* Make inputs take full width */
+            margin-bottom: 10px;
         }
-        .container {
-            margin-top: 50px; /* Add margin to bring form lower */
-            max-width: 400px; /* Limit form width */
-            background-color: rgba(0, 0, 0, 0.8); /* Dark background for the form */
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Add shadow */
-        }
-        h2.loginh2 {
-            color: white; /* Make the header white */
-            text-align: center;
-            margin-bottom: 20px;
-        }
+
         button {
             background-color: #28a745;
             color: white;
@@ -43,10 +58,12 @@
             width: 100%;
             margin-top: 10px;
         }
+
         button:hover {
             background-color: #218838;
             transform: scale(1.05); /* Hover effect */
         }
+
         .error-message {
             color: red;
             text-align: center;

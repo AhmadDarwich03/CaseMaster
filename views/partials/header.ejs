@@ -11,11 +11,8 @@
             <a href="/register">Create a new account</a>
             <a href="/users">All Users</a>
         <% } %>
- 
 
         <a href="/logout">Logout</a>
-        <span style="color: white;">Welcome, <%= session.username %></span>  <!-- Visa användarnamn -->
-    <% } else { %>
-        <a href="/login">Login</a>
+        <span style="color: white;">Welcome, <%= session.username %></span>
     <% } %>
 </nav>
